@@ -17,7 +17,7 @@ const Wrapper = styled.div`
 
   /* Dark overlay + background */
   background:
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.45)),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.25)),
     url("/bg.jpg") center/cover no-repeat;
 
   display: flex;
