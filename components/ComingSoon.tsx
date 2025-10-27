@@ -42,7 +42,7 @@ const Logo = styled(Image)`
   margin-bottom: 2rem;
 
   @media (max-width: 600px) {
-    width: 120px;
+    width: 170px;
   }
 `;
 
