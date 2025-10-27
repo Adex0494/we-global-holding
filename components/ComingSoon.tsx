@@ -37,7 +37,7 @@ const Content = styled.div`
 `;
 
 const Logo = styled(Image)`
-  width: 160px;
+  width: 240px;
   height: auto;
   margin-bottom: 2rem;
 
@@ -72,10 +72,10 @@ export default function ComingSoon() {
   return (
     <Wrapper>
       <Content>
-        <Logo src="/logo-dark.jpeg" alt="We Global Holding Logo" width={160} height={160} />
+        <Logo src="/logo-dark.jpeg" alt="WE Global Holding Logo" width={240} height={240} />
         <Message>We’re working on something great. Coming soon.</Message>
       </Content>
-      <Footer>© {new Date().getFullYear()} We Global Holding Inc.</Footer>
+      <Footer>© {new Date().getFullYear()} WE Global Holding Inc.</Footer>
     </Wrapper>
   );
 }

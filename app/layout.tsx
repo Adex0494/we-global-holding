@@ -3,10 +3,10 @@ import StyledComponentsRegistry from "@/lib/registry";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "We Global Holding Inc.",
-  description: "Official website – coming soon.",
+  title: "WE Global Holding Inc.",
+  description: "Bridging global innovation, investment & growth.",
   icons: {
-    icon: "/logo-dark.jpeg",
+    icon: "/favicon.png",
   },
 };
 
