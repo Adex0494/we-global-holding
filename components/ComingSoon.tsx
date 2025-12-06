@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import styled, { keyframes } from "styled-components";
-import Image from "next/image";
+import styled, { keyframes } from 'styled-components';
+import Image from 'next/image';
 
 // ✨ Animation: subtle fade and slide
 const fadeIn = keyframes`
@@ -13,12 +13,16 @@ const Wrapper = styled.div`
   height: 100vh;
   width: 100vw;
   position: relative;
+  z-index: 0;
   overflow: hidden;
 
   /* Dark overlay + background */
-  background:
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.25)),
-    url("/bg.jpg") center/cover no-repeat;
+  background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.45),
+      rgba(0, 0, 0, 0.25)
+    ),
+    url('/bg.jpg') center/cover no-repeat;
 
   display: flex;
   flex-direction: column;
@@ -34,6 +38,7 @@ const Content = styled.div`
   flex-direction: column;
   align-items: center;
   animation: ${fadeIn} 1.5s ease forwards;
+  padding-top: 3rem; /* pushes content BELOW navbar visually */
 `;
 
 const Logo = styled(Image)`
@@ -72,7 +77,12 @@ export default function ComingSoon() {
   return (
     <Wrapper>
       <Content>
-        <Logo src="/logo-transparent.png" alt="WE Global Holding Logo" width={300} height={300} />
+        <Logo
+          src="/WE-logo-transparent.png"
+          alt="WE Global Holding Logo"
+          width={300}
+          height={300}
+        />
         <Message>We’re working on something great. Coming soon.</Message>
       </Content>
       <Footer>© {new Date().getFullYear()} WE Global Holding Inc.</Footer>
