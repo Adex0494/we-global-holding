@@ -78,7 +78,7 @@ export default function ComingSoon() {
     <Wrapper>
       <Content>
         <Logo
-          src="/WE-logo-transparent.png"
+          src="/logo-we.png"
           alt="WE Global Holding Logo"
           width={300}
           height={300}
