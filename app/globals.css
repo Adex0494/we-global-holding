@@ -14,3 +14,12 @@
   -webkit-backdrop-filter: blur(14px) saturate(180%);
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
+
+/* Global Silver-Blue Gradient Background */
+body {
+  background: linear-gradient(
+      rgba(255, 255, 255, 0.05),
+      rgba(255, 255, 255, 0.02)
+    ),
+    radial-gradient(circle at 20% 30%, #344756 0%, #1f2a33 45%, #0f1419 100%);
+}
