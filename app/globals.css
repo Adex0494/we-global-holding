@@ -8,6 +8,20 @@
   }
 }
 
+@layer utilities {
+  .bg-glass {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(28px) saturate(120%);
+    -webkit-backdrop-filter: blur(28px) saturate(120%);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  }
+
+  .glass-rounded {
+    border-radius: 22px;
+  }
+}
+
 .nav-glass {
   background: rgba(255, 255, 255, 0.07);
   backdrop-filter: blur(14px) saturate(180%);
@@ -15,11 +29,46 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-/* Global Silver-Blue Gradient Background */
-body {
-  background: linear-gradient(
-      rgba(255, 255, 255, 0.05),
-      rgba(255, 255, 255, 0.02)
-    ),
-    radial-gradient(circle at 20% 30%, #344756 0%, #1f2a33 45%, #0f1419 100%);
+.we-glass {
+  background: rgba(
+    255,
+    255,
+    255,
+    0.04
+  ); /* 70% más transparente que la actual */
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(28px) saturate(120%);
+  -webkit-backdrop-filter: blur(28px) saturate(120%);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  border-radius: 22px;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.04); /* cristal muy transparente */
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(28px) saturate(120%);
+  -webkit-backdrop-filter: blur(28px) saturate(120%);
+  border-radius: 22px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  transition: all 0.25s ease;
+}
+
+/* efecto elegante al pasar el mouse */
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 12px 50px rgba(0, 0, 0, 0.14);
+  transform: translateY(-2px);
+}
+
+/* --------------------------- */
+/* PREMIUM GLASS NAVBAR STYLE  */
+/* --------------------------- */
+
+/* Navbar semi-glass, más sólido y visible */
+.glass-navbar {
+  background: rgba(255, 255, 255, 0.95); /* más sólido */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12);
 }

@@ -1,94 +1,80 @@
 export default function DivisionsPage() {
   const divisions = [
     {
-      slug: 'marketplace',
       title: 'Marketplace',
       description:
-        'Plataforma que conecta empresas, productos y servicios dentro del ecosistema WE Global.',
+        'A global marketplace platform connecting products, services, and opportunities.',
     },
     {
-      slug: 'connect',
       title: 'Connect',
       description:
-        'Red de conexiones estratégicas entre empresas, inversores, aliados y oportunidades globales.',
+        'A smart system designed to link businesses, investors, and international partners.',
     },
     {
-      slug: 'verified',
       title: 'Verified',
       description:
-        'Verificación de empresas, identidades y documentos para generar confianza dentro del ecosistema.',
+        'Our verification ecosystem for businesses, documents, and corporate identity.',
     },
     {
-      slug: 'services',
       title: 'Services',
       description:
-        'Servicios corporativos, operativos y de consultoría diseñados para apoyar el crecimiento global.',
+        'Consulting, logistics, expansion, and strategic corporate solutions.',
     },
     {
-      slug: 'investments-properties',
       title: 'Investments & Properties',
       description:
-        'Gestión de inversiones y portafolios de propiedades estratégicas en mercados clave.',
+        'Investment vehicles and international real estate opportunities.',
     },
     {
-      slug: 'franchising',
       title: 'Franchising',
       description:
-        'Expansión de marcas mediante modelos de franquicia estructurados y escalables.',
+        'A franchising system empowering global expansion through certified partners.',
     },
     {
-      slug: 'technology',
       title: 'Technology',
       description:
-        'Vista informativa de las plataformas, apps internas y stack tecnológico de WE Global.',
+        '(Informational only) Internal apps for automation, analytics, and operations.',
     },
     {
-      slug: 'recruitment',
       title: 'Recruitment',
       description:
-        'Soluciones de atracción de talento y reclutamiento global para empresas dentro de la red.',
+        'Connecting verified professionals with global markets and opportunities.',
     },
     {
-      slug: 'events-network',
-      title: 'Events Network',
+      title: 'Events',
       description:
-        'Red de eventos, foros y encuentros estratégicos que conectan actores clave a nivel global.',
+        'Corporate gatherings, international summits, and business conferences.',
+    },
+    {
+      title: 'Network',
+      description:
+        'The global business community built around WE Global Holding Inc.',
     },
   ];
 
   return (
-    <main className="min-h-screen bg-dark-primary text-white px-8 md:px-20 lg:px-36 py-24">
-      {/* HERO */}
-      <section className="max-w-4xl mx-auto text-center mb-24">
-        <h1 className="text-5xl font-bold mb-6">Divisions</h1>
-        <p className="text-lg opacity-80 leading-relaxed">
-          WE Global Holding Inc. está estructurada en divisiones estratégicas
-          que organizan el ecosistema de inversión, servicios, tecnología y
-          expansión.
+    <main className="min-h-screen px-8 md:px-20 lg:px-40 py-24 text-black">
+      {/* ---- HERO ---- */}
+      <section className="text-center mb-20">
+        <h1 className="text-5xl font-bold mb-4">Divisions</h1>
+        <p className="text-lg opacity-80 max-w-3xl mx-auto">
+          Explore the core sectors that power the WE Global Holding Inc.
+          ecosystem across industries and international markets.
         </p>
       </section>
 
-      {/* GRID DE DIVISIONES */}
-      <section className="grid gap-10 md:grid-cols-2 xl:grid-cols-3 max-w-6xl mx-auto">
-        {divisions.map((item) => (
-          <a
-            key={item.slug}
-            href={`/divisions/${item.slug}`}
-            className="group block bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-md transition-all duration-300 hover:bg-white/10 hover:border-white/20 cursor-pointer"
+      {/* ---- DIVISIONS GRID ---- */}
+      <section className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-7xl mx-auto">
+        {divisions.map((item, i) => (
+          <div
+            key={i}
+            className="glass-card p-8 rounded-2xl cursor-pointer transition-all hover:scale-[1.02]"
           >
-            <h2 className="text-2xl font-semibold mb-3">{item.title}</h2>
-            <p className="opacity-70 mb-6">{item.description}</p>
-            <span className="text-accent-primary group-hover:underline">
-              Learn more →
-            </span>
-          </a>
+            <h3 className="text-2xl font-semibold mb-3">{item.title}</h3>
+            <p className="text-black/70 leading-relaxed">{item.description}</p>
+          </div>
         ))}
       </section>
-
-      {/* FOOTER */}
-      <p className="text-center text-sm mt-24 opacity-40">
-        © {new Date().getFullYear()} WE Global Holding Inc. All rights reserved.
-      </p>
     </main>
   );
 }

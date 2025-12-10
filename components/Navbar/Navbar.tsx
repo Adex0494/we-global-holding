@@ -1,58 +1,56 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
-import './Navbar.css';
+import { usePathname } from 'next/navigation';
 
 export default function Navbar() {
+  const pathname = usePathname();
+
+  const navItems = [
+    { label: 'Home', href: '/' },
+    { label: 'About', href: '/about' },
+    { label: 'Divisions', href: '/divisions' },
+    { label: 'Login', href: '/login' },
+  ];
+
   return (
-    <header className="fixed top-0 left-0 w-full z-50 nav-glass">
+    <header className="fixed top-0 left-0 w-full z-40">
       <nav
         className="
-        mx-auto max-w-[1300px]
-        px-6 h-16
-        flex items-center justify-between
-      "
+          glass-navbar 
+          flex items-center justify-between 
+          px-8 md:px-16 py-4 
+        "
       >
-        {/* LOGO + BRAND */}
-        <Link href="/" className="flex items-center space-x-3">
-          <Image
-            src="/logo-we.png"
-            alt="WE Logo"
-            width={120} // ancho base → Next recalcula proporción
-            height={40} // altura base → buen balance
-            priority
-            className="h-8 w-auto md:h-10 pt-1"
-          />
-
-          <span className="font-semibold text-lg tracking-wide text-white">
+        {/* LOGO */}
+        <Link href="/" className="flex items-center gap-2">
+          <img src="/logo-we.png" alt="WE Logo" className="h-6 opacity-90" />
+          <span className="text-lg font-semibold tracking-wide text-black">
             WE Global
           </span>
         </Link>
 
         {/* NAV LINKS */}
-        <ul className="flex items-center space-x-10 text-white/90">
-          <li>
-            <Link href="/" className="nav-link hover:text-white">
-              Home
+        <div className="flex items-center gap-10">
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`
+                text-sm font-medium transition
+                ${pathname === item.href ? 'opacity-100' : 'opacity-60'}
+                hover:opacity-100 text-black
+              `}
+            >
+              {item.label}
             </Link>
-          </li>
-          <li>
-            <Link href="/about" className="nav-link hover:text-white">
-              About
-            </Link>
-          </li>
-          <li>
-            <Link href="/divisions" className="nav-link hover:text-white">
-              Divisions
-            </Link>
-          </li>
-          <li>
-            <Link href="/login" className="nav-link hover:text-white">
-              Login
-            </Link>
-          </li>
-        </ul>
+          ))}
+
+          {/* USER AVATAR (FAKE) */}
+          <div className="w-8 h-8 rounded-full bg-black flex items-center justify-center text-white text-sm shadow-md cursor-pointer">
+            N
+          </div>
+        </div>
       </nav>
     </header>
   );

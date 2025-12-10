@@ -6,6 +6,16 @@ module.exports = {
   ],
   theme: {
     extend: {
+      backgroundImage: {
+        'we-silver': `
+      linear-gradient(
+        145deg,
+        #fefefe 0%,
+        #f7f9fb 45%,
+        #eef4f8 100%
+      )
+    `,
+      },
       colors: {
         silver: {
           light: '#D7DDE4',

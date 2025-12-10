@@ -18,7 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-dark-primary text-white min-h-screen">
+      <body className="bg-we-silver text-black min-h-screen">
         <StyledComponentsRegistry>
           <Navbar />
           <div>{children}</div>
