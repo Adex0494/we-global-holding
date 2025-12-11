@@ -68,7 +68,7 @@ export default function DivisionsPage() {
         {divisions.map((item, i) => (
           <div
             key={i}
-            className="glass-card p-8 rounded-2xl cursor-pointer transition-all hover:scale-[1.02]"
+            className="glass-card p-8 rounded-2xl cursor-pointer transition-all"
           >
             <h3 className="text-2xl font-semibold mb-3">{item.title}</h3>
             <p className="text-black/70 leading-relaxed">{item.description}</p>

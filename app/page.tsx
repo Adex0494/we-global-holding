@@ -1,75 +1,66 @@
-import Link from 'next/link';
-
 export default function HomePage() {
   return (
-    <main className="min-h-screen w-full text-black bg-gradient-to-br from-[#fefefe] via-[#f7f9fb] to-[#eef4f8] px-8 md:px-20 lg:px-40 py-32">
-      {/* ---- HERO SECTION ---- */}
-      <section className="max-w-4xl mx-auto text-center mb-32">
-        <h1 className="text-5xl font-bold mb-6 tracking-tight">
+    <main className="min-h-screen w-full pt-32 pb-24 px-6 md:px-12 lg:px-20">
+      {/* ----------------- HERO ----------------- */}
+      <section className="text-center max-w-4xl mx-auto mb-20">
+        <h1 className="text-5xl md:text-6xl font-bold text-black mb-6">
           WE Global Holding Inc.
         </h1>
 
-        <p className="text-lg opacity-80 leading-relaxed mb-10">
+        <p className="text-lg text-gray-700 max-w-2xl mx-auto">
           Empowering global innovation, investment, and growth across
           industries.
         </p>
 
-        <Link
-          href="/divisions"
-          className="px-8 py-3 rounded-full bg-black text-white font-medium shadow-xl hover:opacity-90 transition"
+        <button
+          className="
+            mt-8 px-10 py-3 rounded-full font-semibold text-white 
+            bg-black shadow-lg hover:shadow-xl transition
+          "
         >
           Explore Divisions
-        </Link>
+        </button>
       </section>
 
-      {/* ---- OUR DIVISIONS ---- */}
-      <section className="max-w-6xl mx-auto mt-10">
-        <h2 className="text-3xl font-bold mb-10">Our Divisions</h2>
+      {/* ----------------- DIVISIONS ----------------- */}
+      <section className="max-w-7xl mx-auto mt-24">
+        <h2 className="text-3xl font-semibold text-black mb-12">
+          Our Divisions
+        </h2>
 
         <div className="grid md:grid-cols-3 gap-10">
-          {/* ---- CARD 1 ---- */}
-          <Link
-            href="/divisions"
-            className="glass-card bg-glass glass-rounded p-8 cursor-pointer group"
-          >
-            <h3 className="text-xl font-semibold mb-3 group-hover:opacity-80 transition">
-              Finance
-            </h3>
-            <p className="text-sm opacity-70">
+          {/* Finance */}
+          <div className="glass-card p-8 cursor-pointer transition-transform">
+            <h3 className="text-xl font-semibold text-black mb-3">Finance</h3>
+            <p className="text-gray-700">
               Learn more about our finance initiatives.
             </p>
-          </Link>
+          </div>
 
-          {/* ---- CARD 2 ---- */}
-          <Link
-            href="/divisions"
-            className="glass-card bg-glass glass-rounded p-8 cursor-pointer group"
-          >
-            <h3 className="text-xl font-semibold mb-3 group-hover:opacity-80 transition">
+          {/* Technology */}
+          <div className="glass-card p-8 cursor-pointer transition-transform">
+            <h3 className="text-xl font-semibold text-black mb-3">
               Technology
             </h3>
-            <p className="text-sm opacity-70">
+            <p className="text-gray-700">
               Learn more about our technology initiatives.
             </p>
-          </Link>
+          </div>
 
-          {/* ---- CARD 3 ---- */}
-          <Link
-            href="/divisions"
-            className="glass-card bg-glass glass-rounded p-8 cursor-pointer group"
-          >
-            <h3 className="text-xl font-semibold mb-3 group-hover:opacity-80 transition">
+          {/* Infrastructure */}
+          <div className="glass-card p-8 cursor-pointer transition-transform">
+            <h3 className="text-xl font-semibold text-black mb-3">
               Infrastructure
             </h3>
-            <p className="text-sm opacity-70">
+            <p className="text-gray-700">
               Learn more about our infrastructure initiatives.
             </p>
-          </Link>
+          </div>
         </div>
       </section>
 
-      {/* ---- FOOTER ---- */}
-      <footer className="text-center mt-20 text-sm opacity-60">
+      {/* ----------------- FOOTER ----------------- */}
+      <footer className="text-center mt-20 text-gray-700 text-sm">
         © 2025 WE Global Holding Inc. All rights reserved.
       </footer>
     </main>

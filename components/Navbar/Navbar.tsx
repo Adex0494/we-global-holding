@@ -26,7 +26,7 @@ export default function Navbar() {
         <Link href="/" className="flex items-center gap-2">
           <img src="/logo-we.png" alt="WE Logo" className="h-6 opacity-90" />
           <span className="text-lg font-semibold tracking-wide text-black">
-            WE Global
+            Global Holding Inc.
           </span>
         </Link>
 

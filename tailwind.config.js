@@ -7,14 +7,8 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: {
-        'we-silver': `
-      linear-gradient(
-        145deg,
-        #fefefe 0%,
-        #f7f9fb 45%,
-        #eef4f8 100%
-      )
-    `,
+        'we-silver':
+          'radial-gradient(circle at top left, rgba(255, 182, 193, 0.20), transparent 20%), radial-gradient(circle at bottom right, rgba(173, 216, 230, 0.40), transparent 100%), linear-gradient(145deg, #fefefe 0%, #f7f9fb 45%, #eef4f8 100%)',
       },
       colors: {
         silver: {
