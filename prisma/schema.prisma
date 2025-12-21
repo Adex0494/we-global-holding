@@ -4,6 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -36,7 +37,7 @@ model BusinessAccessRequest {
 
   legalCompanyName       String
   incorporationCountry   String
-  incorporationState     String
+  incorporationState     String?
   registrationNumber     String
   companyType            CompanyType
   businessAddress        String
