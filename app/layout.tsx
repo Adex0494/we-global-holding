@@ -24,7 +24,7 @@ export default function RootLayout({
           {/* Background image */}
           <div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: "url('/bgPastel.png')" }}
+            style={{ backgroundImage: "url('/bgPink.jpeg')" }}
           />
 
           {/* Gradient overlay */}
