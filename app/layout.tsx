@@ -18,10 +18,23 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-we-silver text-black min-h-screen">
+      <body className="relative min-h-screen text-black">
+        {/* Global Background */}
+        <div className="fixed inset-0 -z-10">
+          {/* Background image */}
+          <div
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: "url('/bgPastel.png')" }}
+          />
+
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-we-silver/80" />
+        </div>
+
+        {/* App content */}
         <StyledComponentsRegistry>
           <Navbar />
-          <div>{children}</div>
+          {children}
         </StyledComponentsRegistry>
       </body>
     </html>

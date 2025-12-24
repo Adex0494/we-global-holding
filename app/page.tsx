@@ -18,6 +18,7 @@ export default function HomePage() {
         <Link
           href="/divisions"
           className="
+    glass-card
     group
     mt-8 inline-flex items-center justify-center
     px-10 py-3 rounded-full font-semibold text-black
@@ -69,7 +70,7 @@ export default function HomePage() {
               <Link
                 key={division.id}
                 href="/divisions"
-                className="group glass-card p-8 transition-all hover:-translate-y-1"
+                className="group glass-card p-8 transition-all"
               >
                 {/* Icon */}
                 <div className="mb-4 inline-flex p-3 rounded-xl bg-black/5">
