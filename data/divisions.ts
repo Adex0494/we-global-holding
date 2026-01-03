@@ -9,8 +9,9 @@ import {
   Landmark,
   Cpu,
 } from 'lucide-react';
+import type { Division, SectionContent } from '@/types';
 
-export const divisions = [
+export const divisions: Division[] = [
   {
     id: 'business-verification',
     title: 'Business Verification',
@@ -102,3 +103,38 @@ export const divisions = [
     icon: Cpu,
   },
 ];
+
+// About page specific content
+export const impactSection: SectionContent = {
+  title: 'Impact and Growth Potential',
+  paragraphs: [
+    'Each of the five applications is built on highly monetizable business models, with clear opportunities for international expansion.',
+    'Their purpose within the WE ecosystem is to move capital, connect markets, simplify processes, and create new opportunities worldwide.',
+  ],
+  list: [
+    'First-year combined revenue (United States): Over $670 million',
+    'Five-year combined revenue (global): Over $5.4 billion annually',
+  ],
+};
+
+export const commissionsSection: SectionContent = {
+  title: 'High and Unlimited Commissions',
+  list: [
+    'Business connections',
+    'Franchises',
+    'Exclusive products',
+    'Logistics projects',
+    'Technological opportunities',
+    'Government contracts',
+    'Properties and investments',
+    'International expansion',
+  ],
+};
+
+export const ecosystemSection: SectionContent = {
+  title: 'Join the WE Global Holding Inc. Ecosystem',
+  paragraphs: [
+    'WE Global Holding Inc. offers more than a role—we offer a global growth vehicle designed for ambitious entrepreneurs and visionaries.',
+    'We do not offer jobs. We offer real opportunities for those who want to build a better life and become part of a global ecosystem.',
+  ],
+};

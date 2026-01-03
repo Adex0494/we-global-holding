@@ -9,15 +9,13 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@babel/runtime": "^7.28.4",
     "@prisma/client": "^5.22.0",
     "bcryptjs": "^3.0.3",
     "lucide-react": "^0.561.0",
     "next": "^16.0.7",
     "prisma": "^5.22.0",
     "react": "^19.2.1",
-    "react-dom": "^19.2.1",
-    "styled-components": "^6.1.19"
+    "react-dom": "^19.2.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -25,7 +23,6 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "autoprefixer": "^10.4.22",
-    "babel-plugin-styled-components": "^2.1.4",
     "eslint": "^9",
     "eslint-config-next": "15.5.5",
     "postcss": "^8.5.6",
