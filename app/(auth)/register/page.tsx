@@ -85,22 +85,25 @@ export default function RegisterPage() {
       setSuccessMsg('Account created. Redirecting…');
       router.replace('/dashboard');
     } catch {
-      setServerError('Network error. Please check your connection and try again.');
+      setServerError(
+        'Network error. Please check your connection and try again.'
+      );
     } finally {
       setIsSubmitting(false);
     }
   }
 
   return (
-    <main className="min-h-[calc(100vh-64px)] px-4 py-10">
-      <div className="mx-auto w-full max-w-2xl">
+    <main className="min-h-[calc(100vh-5rem)] mt-5 flex items-center justify-center px-4 py-10">
+      <div className="w-full max-w-2xl">
         <GlassCard className="p-6 md:p-8">
           <header className="mb-6">
             <h1 className="text-2xl md:text-3xl font-semibold text-neutral-900">
               Create your account
             </h1>
             <p className="mt-2 text-sm md:text-base text-neutral-700">
-              Access the {SITE_NAME} ecosystem with a premium, verified experience.
+              Access the {SITE_NAME} ecosystem with a premium, verified
+              experience.
             </p>
           </header>
 

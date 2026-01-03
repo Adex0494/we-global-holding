@@ -15,6 +15,7 @@ export const ROUTES = {
 // API endpoints
 export const API_ROUTES = {
   USERS: '/api/users',
+  LOGIN: '/api/auth/login',
   BUSINESS_ACCESS_REQUEST: '/api/business-access-request',
 } as const;
 
