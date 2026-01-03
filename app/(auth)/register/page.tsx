@@ -94,7 +94,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <main className="min-h-[calc(100vh-5rem)] mt-5 flex items-center justify-center px-4 py-10">
+    <main className="h-screen pt-16 flex items-center justify-center px-4">
       <div className="w-full max-w-2xl">
         <GlassCard className="p-6 md:p-8">
           <header className="mb-6">
