@@ -1,4 +1,4 @@
-import { SignJWT, jwtVerify } from 'jose';
+import { SignJWT, jwtVerify, JWTPayload } from 'jose';
 import { cookies } from 'next/headers';
 
 const JWT_SECRET = new TextEncoder().encode(
@@ -8,7 +8,7 @@ const JWT_SECRET = new TextEncoder().encode(
 const SESSION_COOKIE = 'session';
 const SESSION_DURATION = 60 * 60 * 24 * 7; // 7 days in seconds
 
-export interface SessionPayload {
+export interface SessionPayload extends JWTPayload {
   userId: string;
   email: string;
 }
