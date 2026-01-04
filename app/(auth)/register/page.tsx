@@ -99,7 +99,7 @@ export default function RegisterPage() {
         <GlassCard className="p-6 md:p-8">
           <header className="mb-6">
             <h1 className="text-2xl md:text-3xl font-semibold text-neutral-900">
-              Create your account
+              Create your account to get started
             </h1>
             <p className="mt-2 text-sm md:text-base text-neutral-700">
               Access the {SITE_NAME} ecosystem with a premium, verified
