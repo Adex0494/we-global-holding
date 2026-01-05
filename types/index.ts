@@ -22,10 +22,58 @@ export interface FormFieldProps {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
-  type?: 'text' | 'email' | 'password' | 'date' | 'tel';
+  type?: 'text' | 'email' | 'password' | 'date' | 'tel' | 'url';
   autoComplete?: string;
   error?: string;
   required?: boolean;
+}
+
+// Textarea field types
+export interface TextareaFieldProps {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+  error?: string;
+  required?: boolean;
+  rows?: number;
+  maxLength?: number;
+}
+
+// Select field types
+export interface SelectOption {
+  value: string;
+  label: string;
+}
+
+export interface SelectFieldProps {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  options: SelectOption[];
+  placeholder?: string;
+  error?: string;
+  required?: boolean;
+}
+
+// Business Access Request form types
+export type CompanyType = 'LLC' | 'CORP' | 'SRL' | 'OTHER';
+
+export interface BusinessAccessFormState {
+  legalCompanyName: string;
+  incorporationCountry: string;
+  incorporationState: string;
+  registrationNumber: string;
+  companyType: CompanyType | '';
+  businessAddress: string;
+  website: string;
+  corporateEmail: string;
+  industry: string;
+  description: string;
+  socialLink: string;
+  representativeName: string;
+  representativePosition: string;
+  interestExplanation: string;
 }
 
 // API response types

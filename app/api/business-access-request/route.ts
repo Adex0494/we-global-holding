@@ -1,13 +1,23 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { Prisma } from '@prisma/client';
+import { getSession } from '@/lib/auth';
 
 export async function POST(req: Request) {
   try {
+    // Get userId from session
+    const session = await getSession();
+    if (!session?.userId) {
+      return NextResponse.json(
+        { ok: false, error: 'Unauthorized. Please log in to continue.' },
+        { status: 401 }
+      );
+    }
+
+    const userId = session.userId;
     const body = await req.json();
 
     const {
-      userId,
       legalCompanyName,
       incorporationCountry,
       incorporationState,
@@ -25,8 +35,8 @@ export async function POST(req: Request) {
     } = body;
 
     // Basic required-field validation (app-level)
+    // Note: userId is obtained from session, not request body
     const requiredFields = [
-      'userId',
       'legalCompanyName',
       'incorporationCountry',
       'registrationNumber',

@@ -6,7 +6,13 @@
       "Bash(cat:*)",
       "Bash(npm install:*)",
       "Bash(node:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git config:*)",
+      "Bash(claude auth:*)",
+      "Bash(claude config list:*)",
+      "Bash(ls:*)",
+      "mcp__ide__getDiagnostics",
+      "Bash(npx tsc:*)"
     ]
   }
 }

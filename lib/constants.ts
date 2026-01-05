@@ -10,6 +10,7 @@ export const ROUTES = {
   LOGIN: '/login',
   REGISTER: '/register',
   DASHBOARD: '/dashboard',
+  BUSINESS_ACCESS_REQUEST: '/business-access/request',
 } as const;
 
 // API endpoints
@@ -24,6 +25,8 @@ export const VALIDATION = {
   MIN_NAME_LENGTH: 2,
   MIN_PASSWORD_LENGTH: 8,
   MIN_PHONE_LENGTH: 7,
+  MAX_INTEREST_WORDS: 150,
+  MIN_COMPANY_NAME_LENGTH: 2,
 } as const;
 
 // Copyright
