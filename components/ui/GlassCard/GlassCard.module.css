@@ -1,0 +1,126 @@
+.glassCard {
+  position: relative;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+
+  /* TRUE OPTICAL GLASS BASE */
+  background: radial-gradient(
+      circle at top left,
+      var(--gradient-top-left-color),
+      transparent var(--gradient-top-left-size)
+    ),
+    radial-gradient(
+      circle at bottom right,
+      var(--gradient-bottom-right-color),
+      transparent var(--gradient-bottom-right-size)
+    ),
+    var(--base-color);
+
+  background-size: var(--background-size);
+  background-position: var(--background-position);
+
+  border: var(--border-width) solid var(--border-color);
+
+  /* NO backdrop-filter to keep text crisp */
+
+  box-shadow: inset 0 1px 0 var(--inset-shadow-top),
+    inset 0 0 var(--inset-glow-size) var(--inset-glow-color),
+    0 var(--shadow-y) var(--shadow-blur) var(--shadow-color);
+
+  transition: box-shadow var(--transition-duration) ease,
+    transform var(--transition-duration) ease,
+    border-color var(--transition-duration) ease,
+    background-position var(--bg-transition-duration) ease,
+    background-color var(--transition-duration) ease;
+}
+
+/* EDGE-LIT GLASS BORDER */
+.glassCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  padding: var(--edge-border-width);
+  z-index: -1; /* Keep behind content */
+
+  background: linear-gradient(
+    135deg,
+    var(--edge-gradient-start),
+    var(--edge-gradient-mid) 45%,
+    var(--edge-gradient-end)
+  );
+
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+
+  transition: background var(--transition-duration) ease;
+}
+
+/* REFRACTION + SHEEN LAYER */
+.glassCard::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: -1; /* Keep behind content */
+
+  background: linear-gradient(
+      to bottom,
+      var(--sheen-gradient-start),
+      var(--sheen-gradient-mid) 35%,
+      transparent 60%
+    ),
+    radial-gradient(
+      circle at 30% 20%,
+      var(--sheen-radial-color),
+      transparent 55%
+    );
+
+  opacity: var(--sheen-opacity);
+  /* NO transform to prevent blur */
+  transition: opacity var(--transition-duration) ease;
+}
+
+/* HOVER STATE - Color effects for ALL cards */
+.glassCard:hover {
+  border-color: var(--hover-border-color);
+
+  /* NO backdrop-filter to keep text crisp - use background-color instead */
+  background-color: rgba(255, 255, 255, 0.08);
+
+  box-shadow: inset 0 1px 0 var(--hover-inset-shadow-top),
+    inset 0 0 var(--hover-inset-glow-size) var(--hover-inset-glow-color),
+    0 var(--hover-shadow-y) var(--hover-shadow-blur) var(--hover-shadow-color);
+
+  background-position: var(--hover-background-position);
+}
+
+/* Activate refraction layer on hover - for ALL cards */
+.glassCard:hover::after {
+  opacity: var(--hover-sheen-opacity);
+  /* NO transform to prevent text blur */
+}
+
+/* Brighter edge glow on hover - for ALL cards */
+.glassCard:hover::before {
+  background: linear-gradient(
+    135deg,
+    var(--hover-edge-gradient-start),
+    var(--hover-edge-gradient-mid) 45%,
+    var(--hover-edge-gradient-end)
+  );
+}
+
+/* TRANSFORM - Only for cards with enableHover=true */
+.glassCard.enableHover:hover {
+  transform: translateY(var(--hover-translate-y)) scale(var(--hover-scale));
+}
+
+/* ACTIVE STATE - Only for cards with enableHover=true */
+.glassCard.enableHover:active {
+  transform: translateY(var(--active-translate-y)) scale(var(--active-scale));
+  background-color: rgba(255, 255, 255, 0.12);
+}

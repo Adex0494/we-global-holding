@@ -24,64 +24,72 @@ export default function AboutPage() {
       {/* Divisions */}
       <section className="space-y-10">
         {divisions.map((item) => (
-          <GlassCard key={item.id}>
-            <h2 className="text-2xl font-semibold mb-4">
-              {item.title} ({item.subtitle})
-            </h2>
+          <GlassCard key={item.id} enableHover={false}>
+            <div className="p-8">
+              <h2 className="text-2xl font-semibold mb-4">
+                {item.title} ({item.subtitle})
+              </h2>
 
-            {item.description.map((text, i) => (
-              <p key={i} className="text-gray-800 leading-relaxed mb-3">
-                {text}
-              </p>
-            ))}
+              {item.description.map((text, i) => (
+                <p key={i} className="text-gray-800 leading-relaxed mb-3">
+                  {text}
+                </p>
+              ))}
 
-            {item.list && (
-              <ul className="list-disc list-inside text-gray-800 mt-4 space-y-1">
-                {item.list.map((li) => (
-                  <li key={li}>{li}</li>
-                ))}
-              </ul>
-            )}
+              {item.list && (
+                <ul className="list-disc list-inside text-gray-800 mt-4 space-y-1">
+                  {item.list.map((li) => (
+                    <li key={li}>{li}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </GlassCard>
         ))}
       </section>
 
       {/* Impact */}
-      <GlassCard className="p-10">
-        <h2 className="text-3xl font-bold mb-6">{impactSection.title}</h2>
+      <GlassCard enableHover={false}>
+        <div className="p-10">
+          <h2 className="text-3xl font-bold mb-6">{impactSection.title}</h2>
 
-        {impactSection.paragraphs?.map((p) => (
-          <p key={p} className="text-gray-800 leading-relaxed mb-4">
-            {p}
-          </p>
-        ))}
-
-        <ul className="list-disc list-inside text-gray-800 space-y-2">
-          {impactSection.list?.map((li) => (
-            <li key={li}>{li}</li>
+          {impactSection.paragraphs?.map((p) => (
+            <p key={p} className="text-gray-800 leading-relaxed mb-4">
+              {p}
+            </p>
           ))}
-        </ul>
+
+          <ul className="list-disc list-inside text-gray-800 space-y-2">
+            {impactSection.list?.map((li) => (
+              <li key={li}>{li}</li>
+            ))}
+          </ul>
+        </div>
       </GlassCard>
 
       {/* Commissions */}
-      <GlassCard className="p-10">
-        <h2 className="text-3xl font-bold mb-6">{commissionsSection.title}</h2>
-        <ul className="list-disc list-inside text-gray-800 space-y-2">
-          {commissionsSection.list?.map((li) => (
-            <li key={li}>{li}</li>
-          ))}
-        </ul>
+      <GlassCard enableHover={false}>
+        <div className="p-10">
+          <h2 className="text-3xl font-bold mb-6">{commissionsSection.title}</h2>
+          <ul className="list-disc list-inside text-gray-800 space-y-2">
+            {commissionsSection.list?.map((li) => (
+              <li key={li}>{li}</li>
+            ))}
+          </ul>
+        </div>
       </GlassCard>
 
       {/* Join */}
-      <GlassCard className="p-10">
-        <h2 className="text-3xl font-bold mb-6">{ecosystemSection.title}</h2>
+      <GlassCard enableHover={false}>
+        <div className="p-10">
+          <h2 className="text-3xl font-bold mb-6">{ecosystemSection.title}</h2>
 
-        {ecosystemSection.paragraphs?.map((p) => (
-          <p key={p} className="text-gray-800 leading-relaxed mb-4">
-            {p}
-          </p>
-        ))}
+          {ecosystemSection.paragraphs?.map((p) => (
+            <p key={p} className="text-gray-800 leading-relaxed mb-4">
+              {p}
+            </p>
+          ))}
+        </div>
       </GlassCard>
     </main>
   );

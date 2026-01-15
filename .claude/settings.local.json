@@ -12,7 +12,16 @@
       "Bash(claude config list:*)",
       "Bash(ls:*)",
       "mcp__ide__getDiagnostics",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(claude status:*)",
+      "Bash(claude whoami)",
+      "Bash(powershell -Command \"echo $env:APPDATA\")",
+      "Bash(dir %USERPROFILE%.claude-code)",
+      "Bash(dir:*)",
+      "Bash(powershell -Command \"Test-Path env:ANTHROPIC_API_KEY\")",
+      "Bash(claude logout)",
+      "Bash(npx prettier:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nRefactor GlassCard component to directory structure and update UI\n\nReorganized GlassCard from single file to directory-based module\nand applied consistent UI styling across multiple pages.\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")"
     ]
   }
 }

@@ -19,7 +19,7 @@ export default function DivisionsPage() {
           const Icon = division.icon;
 
           return (
-            <div key={division.id} className="glass-card p-8">
+            <div key={division.id} className="glass-card glass-card-interactive p-8">
               {/* TITLE + ICON */}
               <div className="flex items-start gap-4 mb-4">
                 <div className="p-3 rounded-xl bg-black/5">
