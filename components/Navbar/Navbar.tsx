@@ -14,8 +14,8 @@ import {
   ChevronRight,
   User,
 } from 'lucide-react';
-import { useTranslation } from '@/lib/i18n';
-import type { TranslationKey } from '@/lib/i18n';
+import { useLanguage } from '@/lib/i18n';
+import type { TranslationKey, Locale } from '@/lib/i18n';
 
 type NavItem = {
   labelKey: TranslationKey;
@@ -30,10 +30,48 @@ const navItems: NavItem[] = [
   { labelKey: 'navLogin', href: '/login', icon: LogIn },
 ];
 
+interface LanguageToggleProps {
+  locale: Locale;
+  onLocaleChange: (locale: Locale) => void;
+}
+
+function LanguageToggle({ locale, onLocaleChange }: LanguageToggleProps) {
+  return (
+    <div className="relative flex items-center h-8 p-0.5 rounded-xl bg-white/30 border border-white/40 shadow-sm">
+      {/* Sliding indicator */}
+      <div
+        className={`absolute h-7 w-9 rounded-[10px] bg-black/90 shadow-sm transition-transform duration-200 ease-out ${
+          locale === 'es' ? 'translate-x-[calc(100%+2px)]' : 'translate-x-0'
+        }`}
+      />
+      {/* EN button */}
+      <button
+        type="button"
+        onClick={() => onLocaleChange('en')}
+        className={`relative z-10 w-9 h-7 text-xs font-semibold rounded-[10px] transition-colors duration-200 ${
+          locale === 'en' ? 'text-white' : 'text-black/70 hover:text-black'
+        }`}
+      >
+        EN
+      </button>
+      {/* ES button */}
+      <button
+        type="button"
+        onClick={() => onLocaleChange('es')}
+        className={`relative z-10 w-9 h-7 text-xs font-semibold rounded-[10px] transition-colors duration-200 ${
+          locale === 'es' ? 'text-white' : 'text-black/70 hover:text-black'
+        }`}
+      >
+        ES
+      </button>
+    </div>
+  );
+}
+
 export default function Navbar() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
-  const { t } = useTranslation();
+  const { t, locale, setLocale } = useLanguage();
 
   const activeHref = useMemo(
     () => navItems.find((i) => i.href === pathname)?.href ?? '',
@@ -67,8 +105,13 @@ export default function Navbar() {
     <header className="fixed top-0 left-0 w-full z-40">
       {/* NAVBAR */}
       <nav className="glass-navbar flex items-center justify-between px-6 md:px-16 py-4">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2" onClick={closeMenu}>
+        {/* Left section: Language Toggle + Logo */}
+        <div className="flex items-center gap-4">
+          {/* Language Toggle */}
+          <LanguageToggle locale={locale} onLocaleChange={setLocale} />
+
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2" onClick={closeMenu}>
           <Image
             src="/logo-we.png"
             alt="WE Logo"
@@ -80,6 +123,7 @@ export default function Navbar() {
             Global Holding Inc.
           </span>
         </Link>
+        </div>
 
         {/* MOBILE ACTIONS */}
         <div className="flex items-center gap-3 md:hidden">
