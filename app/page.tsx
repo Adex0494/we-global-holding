@@ -1,27 +1,31 @@
+'use client';
+
 import Link from 'next/link';
 import { divisions } from '@/data/divisions';
-import { COPYRIGHT_YEAR, SITE_NAME } from '@/lib/constants';
+import { COPYRIGHT_YEAR } from '@/lib/constants';
 import DivisionCard from '@/components/DivisionCard';
+import { useTranslation } from '@/lib/i18n';
 
 export default function HomePage() {
+  const { t } = useTranslation();
+
   return (
     <main className="min-h-screen w-full pt-32 pb-24 px-6 md:px-12 lg:px-20">
       {/* Hero */}
       <section className="text-center max-w-4xl mx-auto mb-20">
         <h1 className="text-5xl md:text-6xl font-bold text-black mb-6">
-          {SITE_NAME}
+          {t('siteName')}
         </h1>
 
         <p className="text-lg text-gray-700 max-w-2xl mx-auto">
-          Empowering global innovation, investment, and growth across
-          industries.
+          {t('homeHeroTagline')}
         </p>
 
         <Link
           href="/divisions"
           className="glass-card group mt-8 inline-flex items-center justify-center px-10 py-3 rounded-full font-semibold text-black bg-white/30 backdrop-blur-md border border-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-all duration-300 ease-out hover:-translate-y-1 hover:bg-white/50 hover:shadow-[0_12px_40px_rgba(0,0,0,0.18)]"
         >
-          <span className="relative z-10">Explore Divisions</span>
+          <span className="relative z-10">{t('homeExploreDivisions')}</span>
           <span className="pointer-events-none absolute inset-0 rounded-full opacity-0 bg-gradient-to-r from-transparent via-white/60 to-transparent translate-x-[-120%] transition-all duration-700 group-hover:opacity-100 group-hover:translate-x-[120%]" />
         </Link>
       </section>
@@ -29,10 +33,9 @@ export default function HomePage() {
       {/* Divisions */}
       <section className="max-w-7xl mx-auto px-6">
         <div className="max-w-3xl mb-12">
-          <h2 className="text-4xl font-bold mb-4">Our Strategic Divisions</h2>
+          <h2 className="text-4xl font-bold mb-4">{t('homeDivisionsTitle')}</h2>
           <p className="text-lg text-gray-700 leading-relaxed">
-            {SITE_NAME} operates across multiple strategic sectors, connecting
-            verified companies, capital, and opportunities worldwide.
+            {t('homeDivisionsSubtitle')}
           </p>
         </div>
 
@@ -45,7 +48,7 @@ export default function HomePage() {
 
       {/* Footer */}
       <footer className="text-center mt-20 text-gray-700 text-sm">
-        © {COPYRIGHT_YEAR} {SITE_NAME}. All rights reserved.
+        {t('copyright')} {COPYRIGHT_YEAR} {t('siteName')}. {t('homeFooterRights')}
       </footer>
     </main>
   );

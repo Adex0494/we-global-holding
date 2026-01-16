@@ -10,7 +10,8 @@ import {
   Select,
   FileUpload,
 } from "@/components/ui";
-import { API_ROUTES, VALIDATION, SITE_NAME, ROUTES } from "@/lib/constants";
+import { VALIDATION, ROUTES } from "@/lib/constants";
+import { useTranslation } from "@/lib/i18n";
 import type { BusinessAccessFormState, CompanyType } from "@/types";
 
 interface ApiError {
@@ -54,6 +55,7 @@ function isValidUrl(url: string): boolean {
 
 export default function BusinessAccessRequestPage() {
   const router = useRouter();
+  const { t } = useTranslation();
 
   const [form, setForm] = useState<BusinessAccessFormState>(INITIAL_FORM_STATE);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -71,51 +73,51 @@ export default function BusinessAccessRequestPage() {
     if (
       form.legalCompanyName.trim().length < VALIDATION.MIN_COMPANY_NAME_LENGTH
     ) {
-      errors.legalCompanyName = "Company name is required";
+      errors.legalCompanyName = `${t('businessAccessLegalName')} ${t('validationRequired')}`;
     }
     if (!form.incorporationCountry.trim()) {
-      errors.incorporationCountry = "Country is required";
+      errors.incorporationCountry = `${t('businessAccessCountry')} ${t('validationRequired')}`;
     }
     if (!form.registrationNumber.trim()) {
-      errors.registrationNumber = "Registration number is required";
+      errors.registrationNumber = `${t('businessAccessRegNumber')} ${t('validationRequired')}`;
     }
     if (!form.companyType) {
-      errors.companyType = "Company type is required";
+      errors.companyType = `${t('businessAccessCompanyType')} ${t('validationRequired')}`;
     }
     if (!form.businessAddress.trim()) {
-      errors.businessAddress = "Business address is required";
+      errors.businessAddress = `${t('businessAccessAddress')} ${t('validationRequired')}`;
     }
     if (!form.corporateEmail.includes("@")) {
-      errors.corporateEmail = "Valid email is required";
+      errors.corporateEmail = t('validationValidEmail');
     }
     if (!form.industry.trim()) {
-      errors.industry = "Industry is required";
+      errors.industry = `${t('businessAccessIndustry')} ${t('validationRequired')}`;
     }
     if (!form.description.trim()) {
-      errors.description = "Company description is required";
+      errors.description = `${t('businessAccessDescription')} ${t('validationRequired')}`;
     }
     if (form.representativeName.trim().length < VALIDATION.MIN_NAME_LENGTH) {
-      errors.representativeName = "Representative name is required";
+      errors.representativeName = `${t('businessAccessRepName')} ${t('validationRequired')}`;
     }
     if (!form.representativePosition.trim()) {
-      errors.representativePosition = "Position is required";
+      errors.representativePosition = `${t('businessAccessPosition')} ${t('validationRequired')}`;
     }
     if (!form.interestExplanation.trim()) {
-      errors.interestExplanation = "Interest explanation is required";
+      errors.interestExplanation = `${t('businessAccessInterest')} ${t('validationRequired')}`;
     } else if (wordCount > VALIDATION.MAX_INTEREST_WORDS) {
-      errors.interestExplanation = `Maximum ${VALIDATION.MAX_INTEREST_WORDS} words allowed`;
+      errors.interestExplanation = `${t('validationMaxWords')} ${VALIDATION.MAX_INTEREST_WORDS} ${t('validationWords')}`;
     }
 
     // Optional URL validations
     if (form.website && !isValidUrl(form.website)) {
-      errors.website = "URL must start with http:// or https://";
+      errors.website = t('validationUrlFormat');
     }
     if (form.socialLink && !isValidUrl(form.socialLink)) {
-      errors.socialLink = "URL must start with http:// or https://";
+      errors.socialLink = t('validationUrlFormat');
     }
 
     return errors;
-  }, [form, wordCount]);
+  }, [form, wordCount, t]);
 
   const canSubmit = useMemo(() => {
     return Object.keys(validationErrors).length === 0;
@@ -137,7 +139,7 @@ export default function BusinessAccessRequestPage() {
     setSuccessMsg(null);
 
     try {
-      const res = await fetch(API_ROUTES.BUSINESS_ACCESS_REQUEST, {
+      const res = await fetch('/api/business-access-request', {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -160,7 +162,7 @@ export default function BusinessAccessRequestPage() {
       });
 
       if (!res.ok) {
-        let msg = "Submission failed. Please try again.";
+        let msg = t('businessAccessSubmissionFailed');
         try {
           const data = (await res.json()) as ApiError;
           msg = data.error || data.message || msg;
@@ -171,16 +173,12 @@ export default function BusinessAccessRequestPage() {
         return;
       }
 
-      setSuccessMsg(
-        "Your request has been submitted successfully. Redirecting to dashboard...",
-      );
+      setSuccessMsg(t('businessAccessSuccess'));
       setTimeout(() => {
         router.replace(ROUTES.DASHBOARD);
       }, 2000);
     } catch {
-      setServerError(
-        "Network error. Please check your connection and try again.",
-      );
+      setServerError(t('loginNetworkError'));
     } finally {
       setIsSubmitting(false);
     }
@@ -193,11 +191,10 @@ export default function BusinessAccessRequestPage() {
           <div className="p-6 md:p-8">
             <header className="mb-8">
               <h1 className="text-2xl md:text-3xl font-semibold text-neutral-900">
-                Business Access Verification Request
+                {t('businessAccessTitle')}
               </h1>
               <p className="mt-2 text-sm md:text-base text-neutral-700">
-                Complete this form to request business access to the {SITE_NAME}{" "}
-                ecosystem.
+                {t('businessAccessSubtitle')} {t('siteName')} {t('businessAccessEcosystem')}
               </p>
             </header>
 
@@ -205,11 +202,11 @@ export default function BusinessAccessRequestPage() {
               {/* Section 1: Company Information */}
               <section>
                 <h2 className="text-lg font-semibold text-neutral-900 mb-4">
-                  Company Information
+                  {t('businessAccessCompanyInfo')}
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Input
-                    label="Legal Company Name"
+                    label={t('businessAccessLegalName')}
                     value={form.legalCompanyName}
                     onChange={(v) => update("legalCompanyName", v)}
                     placeholder="e.g. Acme Corporation LLC"
@@ -221,7 +218,7 @@ export default function BusinessAccessRequestPage() {
                     }
                   />
                   <Input
-                    label="Country of Incorporation"
+                    label={t('businessAccessCountry')}
                     value={form.incorporationCountry}
                     onChange={(v) => update("incorporationCountry", v)}
                     placeholder="e.g. United States"
@@ -234,13 +231,13 @@ export default function BusinessAccessRequestPage() {
                     }
                   />
                   <Input
-                    label="State/Province"
+                    label={t('businessAccessState')}
                     value={form.incorporationState}
                     onChange={(v) => update("incorporationState", v)}
                     placeholder="e.g. Delaware"
                   />
                   <Input
-                    label="Registration Number"
+                    label={t('businessAccessRegNumber')}
                     value={form.registrationNumber}
                     onChange={(v) => update("registrationNumber", v)}
                     placeholder="e.g. 12345678"
@@ -253,7 +250,7 @@ export default function BusinessAccessRequestPage() {
                     }
                   />
                   <Select
-                    label="Company Type"
+                    label={t('businessAccessCompanyType')}
                     value={form.companyType}
                     onChange={(v) =>
                       update("companyType", v as CompanyType | "")
@@ -268,7 +265,7 @@ export default function BusinessAccessRequestPage() {
                     }
                   />
                   <Input
-                    label="Business Address"
+                    label={t('businessAccessAddress')}
                     value={form.businessAddress}
                     onChange={(v) => update("businessAddress", v)}
                     placeholder="e.g. 123 Main St, Suite 100"
@@ -280,7 +277,7 @@ export default function BusinessAccessRequestPage() {
                     }
                   />
                   <Input
-                    label="Website"
+                    label={t('businessAccessWebsite')}
                     value={form.website}
                     onChange={(v) => update("website", v)}
                     placeholder="https://example.com"
@@ -292,7 +289,7 @@ export default function BusinessAccessRequestPage() {
                     }
                   />
                   <Input
-                    label="Corporate Email"
+                    label={t('businessAccessEmail')}
                     value={form.corporateEmail}
                     onChange={(v) => update("corporateEmail", v)}
                     placeholder="contact@company.com"
@@ -305,7 +302,7 @@ export default function BusinessAccessRequestPage() {
                     }
                   />
                   <Input
-                    label="Industry"
+                    label={t('businessAccessIndustry')}
                     value={form.industry}
                     onChange={(v) => update("industry", v)}
                     placeholder="e.g. Financial Services"
@@ -317,7 +314,7 @@ export default function BusinessAccessRequestPage() {
                     }
                   />
                   <Input
-                    label="Social Link"
+                    label={t('businessAccessSocialLink')}
                     value={form.socialLink}
                     onChange={(v) => update("socialLink", v)}
                     placeholder="https://linkedin.com/company/..."
@@ -331,7 +328,7 @@ export default function BusinessAccessRequestPage() {
                 </div>
                 <div className="mt-4">
                   <Textarea
-                    label="Company Description"
+                    label={t('businessAccessDescription')}
                     value={form.description}
                     onChange={(v) => update("description", v)}
                     placeholder="Briefly describe your company, its mission, and core business activities..."
@@ -349,11 +346,11 @@ export default function BusinessAccessRequestPage() {
               {/* Section 2: Authorized Representative */}
               <section>
                 <h2 className="text-lg font-semibold text-neutral-900 mb-4">
-                  Authorized Representative
+                  {t('businessAccessRepresentative')}
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Input
-                    label="Representative Name"
+                    label={t('businessAccessRepName')}
                     value={form.representativeName}
                     onChange={(v) => update("representativeName", v)}
                     placeholder="e.g. John Smith"
@@ -366,7 +363,7 @@ export default function BusinessAccessRequestPage() {
                     }
                   />
                   <Input
-                    label="Position/Title"
+                    label={t('businessAccessPosition')}
                     value={form.representativePosition}
                     onChange={(v) => update("representativePosition", v)}
                     placeholder="e.g. Chief Executive Officer"
@@ -384,11 +381,11 @@ export default function BusinessAccessRequestPage() {
               {/* Section 3: Interest */}
               <section>
                 <h2 className="text-lg font-semibold text-neutral-900 mb-4">
-                  Interest
+                  {t('businessAccessInterest')}
                 </h2>
                 <div>
                   <Textarea
-                    label="Briefly explain your interest in accessing the WE Global Holding Inc. ecosystem"
+                    label={t('businessAccessInterestLabel')}
                     value={form.interestExplanation}
                     onChange={(v) => update("interestExplanation", v)}
                     placeholder="Describe why your company is interested in joining our ecosystem, what value you hope to bring, and how you envision our collaboration..."
@@ -408,7 +405,7 @@ export default function BusinessAccessRequestPage() {
                         : "text-neutral-500"
                     }`}
                   >
-                    {wordCount} / {VALIDATION.MAX_INTEREST_WORDS} words
+                    {wordCount} / {VALIDATION.MAX_INTEREST_WORDS} {t('validationWords').split(' ')[0]}
                   </p>
                 </div>
               </section>
@@ -416,23 +413,18 @@ export default function BusinessAccessRequestPage() {
               {/* Section 4: Optional Documents (Deferred) */}
               <section>
                 <h2 className="text-lg font-semibold text-neutral-900 mb-4">
-                  Supporting Documents
+                  {t('businessAccessDocuments')}
                 </h2>
                 <FileUpload disabled />
                 <p className="mt-2 text-xs text-neutral-500">
-                  Examples: Certificate of good standing, business license, or
-                  other relevant documentation.
+                  {t('businessAccessDocumentsNote')}
                 </p>
               </section>
 
               {/* Legal Disclaimer */}
               <div className="rounded-xl border border-neutral-200 bg-neutral-50/50 px-4 py-3">
                 <p className="text-xs text-neutral-600 leading-relaxed">
-                  <strong>Disclaimer:</strong> WE Global Holding Inc. performs
-                  an internal review solely for access, reputation, and
-                  transparency purposes within the ecosystem. We do not act as a
-                  broker, agent, intermediary, or legal authority. This review
-                  does not constitute governmental certification.
+                  <strong>{t('businessAccessDisclaimer')}</strong> {t('businessAccessDisclaimerText')}
                 </p>
               </div>
 
@@ -456,7 +448,7 @@ export default function BusinessAccessRequestPage() {
                 isLoading={isSubmitting}
                 className="w-full"
               >
-                Submit Request
+                {t('businessAccessSubmit')}
               </Button>
             </form>
           </div>

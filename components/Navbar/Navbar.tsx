@@ -14,23 +14,26 @@ import {
   ChevronRight,
   User,
 } from 'lucide-react';
+import { useTranslation } from '@/lib/i18n';
+import type { TranslationKey } from '@/lib/i18n';
 
 type NavItem = {
-  label: string;
+  labelKey: TranslationKey;
   href: string;
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 };
 
 const navItems: NavItem[] = [
-  { label: 'Home', href: '/', icon: Home },
-  { label: 'About', href: '/about', icon: Info },
-  { label: 'Divisions', href: '/divisions', icon: LayoutGrid },
-  { label: 'Login', href: '/login', icon: LogIn },
+  { labelKey: 'navHome', href: '/', icon: Home },
+  { labelKey: 'navAbout', href: '/about', icon: Info },
+  { labelKey: 'navDivisions', href: '/divisions', icon: LayoutGrid },
+  { labelKey: 'navLogin', href: '/login', icon: LogIn },
 ];
 
 export default function Navbar() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const { t } = useTranslation();
 
   const activeHref = useMemo(
     () => navItems.find((i) => i.href === pathname)?.href ?? '',
@@ -111,7 +114,7 @@ export default function Navbar() {
                   : 'opacity-60 hover:opacity-100'
               }`}
             >
-              {item.label}
+              {t(item.labelKey)}
             </Link>
           ))}
 
@@ -162,7 +165,7 @@ export default function Navbar() {
               </div>
               <div>
                 <p className="text-sm font-semibold text-neutral-900">
-                  Welcome
+                  {t('navWelcome')}
                 </p>
                 <p className="text-xs text-neutral-600">WE Global Holding</p>
               </div>
@@ -200,7 +203,7 @@ export default function Navbar() {
                       <Icon className="w-5 h-5 text-black" />
                     </span>
                     <span className="text-sm font-medium text-neutral-900">
-                      {item.label}
+                      {t(item.labelKey)}
                     </span>
                   </span>
 
@@ -213,7 +216,7 @@ export default function Navbar() {
           {/* Footer */}
           <div className="mt-6 pt-6 border-t border-white/30">
             <p className="text-xs text-neutral-600">
-              Premium enterprise access and secure workflows.
+              {t('navFooterText')}
             </p>
           </div>
         </aside>

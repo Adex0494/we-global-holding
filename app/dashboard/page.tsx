@@ -2,15 +2,18 @@
 
 import Link from 'next/link';
 import { GlassCard } from '@/components/ui';
+import { useTranslation } from '@/lib/i18n';
 
 export default function DashboardPage() {
+  const { t } = useTranslation();
+
   return (
     <main className="min-h-[calc(100vh-5rem)] mt-20 flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-4xl space-y-6">
         <header>
-          <h1 className="text-3xl font-semibold text-neutral-900">Dashboard</h1>
+          <h1 className="text-3xl font-semibold text-neutral-900">{t('dashboardTitle')}</h1>
           <p className="mt-2 text-neutral-700">
-            Welcome to your WE Global Holding account.
+            {t('dashboardWelcome')}
           </p>
         </header>
 
@@ -20,11 +23,10 @@ export default function DashboardPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-xl font-semibold text-neutral-900 group-hover:text-black">
-                    Request Business Access Verification
+                    {t('dashboardBusinessAccessTitle')}
                   </h2>
                   <p className="mt-1 text-sm text-neutral-600">
-                    Verify your business to unlock premium features and partnership
-                    opportunities.
+                    {t('dashboardBusinessAccessDesc')}
                   </p>
                 </div>
                 <div className="flex-shrink-0 ml-4">

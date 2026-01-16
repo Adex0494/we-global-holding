@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { GlassCard, Button, Input } from '@/components/ui';
-import { SITE_NAME } from '@/lib/constants';
+import { useTranslation } from '@/lib/i18n';
 
 interface ApiError {
   error?: string;
@@ -13,6 +13,7 @@ interface ApiError {
 
 export default function LoginPage() {
   const router = useRouter();
+  const { t } = useTranslation();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -42,7 +43,7 @@ export default function LoginPage() {
       });
 
       if (!res.ok) {
-        let msg = 'Login failed. Please try again.';
+        let msg = t('loginFailed');
         try {
           const data = (await res.json()) as ApiError;
           msg = data.error || data.message || msg;
@@ -56,7 +57,7 @@ export default function LoginPage() {
       // Redirect to dashboard on success
       router.replace('/dashboard');
     } catch {
-      setServerError('Network error. Please check your connection and try again.');
+      setServerError(t('loginNetworkError'));
     } finally {
       setIsSubmitting(false);
     }
@@ -69,27 +70,27 @@ export default function LoginPage() {
           <div className="p-6 md:p-8">
             <header className="mb-6">
               <h1 className="text-2xl md:text-3xl font-semibold text-neutral-900">
-                Welcome back
+                {t('loginWelcomeBack')}
               </h1>
               <p className="mt-2 text-sm md:text-base text-neutral-700">
-                Sign in to your {SITE_NAME} account.
+                {t('loginSignInTo')} {t('siteName')} {t('loginAccount')}
               </p>
             </header>
 
             <form onSubmit={onSubmit} className="space-y-5">
               <Input
-                label="Email"
+                label={t('loginEmail')}
                 value={email}
                 onChange={setEmail}
-                placeholder="you@company.com"
+                placeholder={t('loginEmailPlaceholder')}
                 autoComplete="email"
                 type="email"
               />
               <Input
-                label="Password"
+                label={t('loginPassword')}
                 value={password}
                 onChange={setPassword}
-                placeholder="Enter your password"
+                placeholder={t('loginPasswordPlaceholder')}
                 autoComplete="current-password"
                 type="password"
               />
@@ -106,16 +107,16 @@ export default function LoginPage() {
                 isLoading={isSubmitting}
                 className="w-full"
               >
-                Sign in
+                {t('loginSignIn')}
               </Button>
 
               <p className="text-sm text-neutral-700">
-                Don&apos;t have an account?{' '}
+                {t('loginNoAccount')}{' '}
                 <Link
                   href="/register"
                   className="font-medium text-neutral-900 underline decoration-neutral-400 hover:decoration-neutral-900"
                 >
-                  Create one
+                  {t('loginCreateOne')}
                 </Link>
               </p>
             </form>

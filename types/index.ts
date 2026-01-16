@@ -1,13 +1,13 @@
 import type { LucideIcon } from 'lucide-react';
+import type { TranslationKey } from '@/lib/i18n';
 
 // Division types
 export interface Division {
   id: string;
-  title: string;
-  subtitle: string;
-  description: string[];
   icon: LucideIcon;
-  list?: string[];
+  nameKey: TranslationKey;
+  descriptionKey: TranslationKey;
+  statusKey: TranslationKey;
 }
 
 // Navigation types
@@ -94,9 +94,3 @@ export interface User {
   createdAt: Date;
 }
 
-// Section content types (for about page data)
-export interface SectionContent {
-  title: string;
-  paragraphs?: string[];
-  list?: string[];
-}
