@@ -23,7 +23,9 @@
       "Bash(npx prettier:*)",
       "Bash(git commit -m \"$\\(cat <<''EOF''\nRefactor GlassCard component to directory structure and update UI\n\nReorganized GlassCard from single file to directory-based module\nand applied consistent UI styling across multiple pages.\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
       "Bash(npm run build:*)",
-      "Bash(npm test)"
+      "Bash(npm test)",
+      "Bash(npm run lint)",
+      "Bash(npm ls:*)"
     ]
   }
 }
