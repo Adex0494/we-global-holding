@@ -11,14 +11,24 @@ import {
   FileUpload,
 } from "@/components/ui";
 import { VALIDATION, ROUTES } from "@/lib/constants";
-import { useTranslation } from "@/lib/i18n";
+import { useTranslation, type TranslationKey } from "@/lib/i18n";
 import type { BusinessAccessFormState, CompanyType } from "@/types";
 
 interface ApiError {
+  ok: boolean;
+  errorCode?: string;
   error?: string;
   message?: string;
   fields?: string[];
 }
+
+// Map backend error codes to translation keys
+const ERROR_CODE_MAP: Record<string, string> = {
+  UNAUTHORIZED: 'errorUnauthorized',
+  MISSING_FIELDS: 'errorMissingFields',
+  PENDING_REQUEST: 'errorPendingRequest',
+  INTERNAL_ERROR: 'errorInternalServer',
+};
 
 const COMPANY_TYPE_OPTIONS = [
   { value: "LLC", label: "LLC - Limited Liability Company" },
@@ -61,6 +71,7 @@ export default function BusinessAccessRequestPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   const wordCount = useMemo(
     () => countWords(form.interestExplanation),
@@ -130,9 +141,45 @@ export default function BusinessAccessRequestPage() {
     setForm((prev) => ({ ...prev, [key]: value }));
   }
 
+  // Helper to get error for a field - shows error if field was touched or submit was attempted
+  function getFieldError(
+    field: keyof BusinessAccessFormState,
+    showOnlyAfterInput = false
+  ): string | undefined {
+    const error = validationErrors[field];
+    if (!error) return undefined;
+
+    // For optional URL fields, show error immediately when there's invalid input
+    if (showOnlyAfterInput) {
+      return form[field] ? error : undefined;
+    }
+
+    // For required fields, show error after submit attempt OR if field has been touched and is invalid
+    if (hasAttemptedSubmit) {
+      return error;
+    }
+
+    // Show error if field has some value but is still invalid (user started typing)
+    if (form[field]) {
+      return error;
+    }
+
+    return undefined;
+  }
+
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!canSubmit || isSubmitting) return;
+    setHasAttemptedSubmit(true);
+
+    if (!canSubmit) {
+      // Focus the first field with an error
+      const firstErrorField = Object.keys(validationErrors)[0] as keyof BusinessAccessFormState;
+      const element = document.getElementById(`field-${firstErrorField}`);
+      element?.focus();
+      return;
+    }
+
+    if (isSubmitting) return;
 
     setIsSubmitting(true);
     setServerError(null);
@@ -165,7 +212,13 @@ export default function BusinessAccessRequestPage() {
         let msg = t('businessAccessSubmissionFailed');
         try {
           const data = (await res.json()) as ApiError;
-          msg = data.error || data.message || msg;
+          // Try to get translated message from error code
+          if (data.errorCode && ERROR_CODE_MAP[data.errorCode]) {
+            const translationKey = ERROR_CODE_MAP[data.errorCode] as TranslationKey;
+            msg = t(translationKey);
+          } else if (data.error || data.message) {
+            msg = data.error || data.message || msg;
+          }
         } catch {
           // ignore JSON parse errors
         }
@@ -196,60 +249,55 @@ export default function BusinessAccessRequestPage() {
               <p className="mt-2 text-sm md:text-base text-neutral-700">
                 {t('businessAccessSubtitle')} {t('siteName')} {t('businessAccessEcosystem')}
               </p>
+              <p className="mt-3 text-sm text-neutral-600">
+                <span className="text-red-500" aria-hidden="true">*</span>{' '}
+                {t('requiredFieldsNote')}
+              </p>
             </header>
 
-            <form onSubmit={onSubmit} className="space-y-8">
+            <form onSubmit={onSubmit} className="space-y-8" noValidate>
               {/* Section 1: Company Information */}
-              <section>
-                <h2 className="text-lg font-semibold text-neutral-900 mb-4">
+              <section aria-labelledby="company-info-heading">
+                <h2 id="company-info-heading" className="text-lg font-semibold text-neutral-900 mb-4">
                   {t('businessAccessCompanyInfo')}
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Input
+                    id="field-legalCompanyName"
                     label={t('businessAccessLegalName')}
                     value={form.legalCompanyName}
                     onChange={(v) => update("legalCompanyName", v)}
                     placeholder="e.g. Acme Corporation LLC"
                     required
-                    error={
-                      form.legalCompanyName && validationErrors.legalCompanyName
-                        ? validationErrors.legalCompanyName
-                        : undefined
-                    }
+                    error={getFieldError('legalCompanyName')}
                   />
                   <Input
+                    id="field-incorporationCountry"
                     label={t('businessAccessCountry')}
                     value={form.incorporationCountry}
                     onChange={(v) => update("incorporationCountry", v)}
                     placeholder="e.g. United States"
                     required
-                    error={
-                      form.incorporationCountry &&
-                      validationErrors.incorporationCountry
-                        ? validationErrors.incorporationCountry
-                        : undefined
-                    }
+                    error={getFieldError('incorporationCountry')}
                   />
                   <Input
+                    id="field-incorporationState"
                     label={t('businessAccessState')}
                     value={form.incorporationState}
                     onChange={(v) => update("incorporationState", v)}
                     placeholder="e.g. Delaware"
                   />
                   <Input
+                    id="field-registrationNumber"
                     label={t('businessAccessRegNumber')}
                     value={form.registrationNumber}
                     onChange={(v) => update("registrationNumber", v)}
                     placeholder="e.g. 12345678"
                     required
-                    error={
-                      form.registrationNumber &&
-                      validationErrors.registrationNumber
-                        ? validationErrors.registrationNumber
-                        : undefined
-                    }
+                    error={getFieldError('registrationNumber')}
                   />
                   <Select
+                    id="field-companyType"
                     label={t('businessAccessCompanyType')}
                     value={form.companyType}
                     onChange={(v) =>
@@ -258,145 +306,111 @@ export default function BusinessAccessRequestPage() {
                     options={COMPANY_TYPE_OPTIONS}
                     placeholder="Select company type"
                     required
-                    error={
-                      form.companyType && validationErrors.companyType
-                        ? validationErrors.companyType
-                        : undefined
-                    }
+                    error={getFieldError('companyType')}
                   />
                   <Input
+                    id="field-businessAddress"
                     label={t('businessAccessAddress')}
                     value={form.businessAddress}
                     onChange={(v) => update("businessAddress", v)}
                     placeholder="e.g. 123 Main St, Suite 100"
                     required
-                    error={
-                      form.businessAddress && validationErrors.businessAddress
-                        ? validationErrors.businessAddress
-                        : undefined
-                    }
+                    error={getFieldError('businessAddress')}
                   />
                   <Input
+                    id="field-website"
                     label={t('businessAccessWebsite')}
                     value={form.website}
                     onChange={(v) => update("website", v)}
                     placeholder="https://example.com"
                     type="url"
-                    error={
-                      form.website && validationErrors.website
-                        ? validationErrors.website
-                        : undefined
-                    }
+                    error={getFieldError('website', true)}
                   />
                   <Input
+                    id="field-corporateEmail"
                     label={t('businessAccessEmail')}
                     value={form.corporateEmail}
                     onChange={(v) => update("corporateEmail", v)}
                     placeholder="contact@company.com"
                     type="email"
                     required
-                    error={
-                      form.corporateEmail && validationErrors.corporateEmail
-                        ? validationErrors.corporateEmail
-                        : undefined
-                    }
+                    error={getFieldError('corporateEmail')}
                   />
                   <Input
+                    id="field-industry"
                     label={t('businessAccessIndustry')}
                     value={form.industry}
                     onChange={(v) => update("industry", v)}
                     placeholder="e.g. Financial Services"
                     required
-                    error={
-                      form.industry && validationErrors.industry
-                        ? validationErrors.industry
-                        : undefined
-                    }
+                    error={getFieldError('industry')}
                   />
                   <Input
+                    id="field-socialLink"
                     label={t('businessAccessSocialLink')}
                     value={form.socialLink}
                     onChange={(v) => update("socialLink", v)}
                     placeholder="https://linkedin.com/company/..."
                     type="url"
-                    error={
-                      form.socialLink && validationErrors.socialLink
-                        ? validationErrors.socialLink
-                        : undefined
-                    }
+                    error={getFieldError('socialLink', true)}
                   />
                 </div>
                 <div className="mt-4">
                   <Textarea
+                    id="field-description"
                     label={t('businessAccessDescription')}
                     value={form.description}
                     onChange={(v) => update("description", v)}
                     placeholder="Briefly describe your company, its mission, and core business activities..."
                     rows={3}
                     required
-                    error={
-                      form.description && validationErrors.description
-                        ? validationErrors.description
-                        : undefined
-                    }
+                    error={getFieldError('description')}
                   />
                 </div>
               </section>
 
               {/* Section 2: Authorized Representative */}
-              <section>
-                <h2 className="text-lg font-semibold text-neutral-900 mb-4">
+              <section aria-labelledby="representative-heading">
+                <h2 id="representative-heading" className="text-lg font-semibold text-neutral-900 mb-4">
                   {t('businessAccessRepresentative')}
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Input
+                    id="field-representativeName"
                     label={t('businessAccessRepName')}
                     value={form.representativeName}
                     onChange={(v) => update("representativeName", v)}
                     placeholder="e.g. John Smith"
                     required
-                    error={
-                      form.representativeName &&
-                      validationErrors.representativeName
-                        ? validationErrors.representativeName
-                        : undefined
-                    }
+                    error={getFieldError('representativeName')}
                   />
                   <Input
+                    id="field-representativePosition"
                     label={t('businessAccessPosition')}
                     value={form.representativePosition}
                     onChange={(v) => update("representativePosition", v)}
                     placeholder="e.g. Chief Executive Officer"
                     required
-                    error={
-                      form.representativePosition &&
-                      validationErrors.representativePosition
-                        ? validationErrors.representativePosition
-                        : undefined
-                    }
+                    error={getFieldError('representativePosition')}
                   />
                 </div>
               </section>
 
               {/* Section 3: Interest */}
-              <section>
-                <h2 className="text-lg font-semibold text-neutral-900 mb-4">
+              <section aria-labelledby="interest-heading">
+                <h2 id="interest-heading" className="text-lg font-semibold text-neutral-900 mb-4">
                   {t('businessAccessInterest')}
                 </h2>
                 <div>
                   <Textarea
+                    id="field-interestExplanation"
                     label={t('businessAccessInterestLabel')}
                     value={form.interestExplanation}
                     onChange={(v) => update("interestExplanation", v)}
                     placeholder="Describe why your company is interested in joining our ecosystem, what value you hope to bring, and how you envision our collaboration..."
                     rows={4}
                     required
-                    error={
-                      form.interestExplanation &&
-                      validationErrors.interestExplanation
-                        ? validationErrors.interestExplanation
-                        : undefined
-                    }
+                    error={getFieldError('interestExplanation')}
                   />
                   <p
                     className={`mt-1 text-xs text-right ${
@@ -404,6 +418,7 @@ export default function BusinessAccessRequestPage() {
                         ? "text-red-600"
                         : "text-neutral-500"
                     }`}
+                    aria-live="polite"
                   >
                     {wordCount} / {VALIDATION.MAX_INTEREST_WORDS} {t('validationWords').split(' ')[0]}
                   </p>
@@ -411,8 +426,8 @@ export default function BusinessAccessRequestPage() {
               </section>
 
               {/* Section 4: Optional Documents (Deferred) */}
-              <section>
-                <h2 className="text-lg font-semibold text-neutral-900 mb-4">
+              <section aria-labelledby="documents-heading">
+                <h2 id="documents-heading" className="text-lg font-semibold text-neutral-900 mb-4">
                   {t('businessAccessDocuments')}
                 </h2>
                 <FileUpload disabled />
@@ -430,13 +445,19 @@ export default function BusinessAccessRequestPage() {
 
               {/* Error/Success Messages */}
               {serverError && (
-                <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                <div
+                  role="alert"
+                  className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+                >
                   {serverError}
                 </div>
               )}
 
               {successMsg && (
-                <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+                <div
+                  role="status"
+                  className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800"
+                >
                   {successMsg}
                 </div>
               )}
@@ -444,7 +465,6 @@ export default function BusinessAccessRequestPage() {
               {/* Submit Button */}
               <Button
                 type="submit"
-                disabled={!canSubmit}
                 isLoading={isSubmitting}
                 className="w-full"
               >

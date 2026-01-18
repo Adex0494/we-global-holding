@@ -98,10 +98,10 @@ export default function DivisionPage() {
           <div className="space-y-3">
             <h3 className="text-lg font-semibold">{t('interestedInDivision')}</h3>
             <Link
-              href="/business-access/request"
+              href="/login"
               className="inline-flex items-center justify-center px-6 py-2.5 rounded-full font-semibold text-black bg-white/30 backdrop-blur-md border border-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-all duration-300 ease-out hover:-translate-y-1 hover:bg-white/50 hover:shadow-[0_12px_40px_rgba(0,0,0,0.18)]"
             >
-              {t('requestAccess')}
+              {t('signUpAndRequestAccess')}
             </Link>
           </div>
         </GlassCard>

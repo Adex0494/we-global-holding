@@ -19,6 +19,7 @@ export interface NavItem {
 
 // Form field types
 export interface FormFieldProps {
+  id?: string;
   label: string;
   value: string;
   onChange: (value: string) => void;
@@ -31,6 +32,7 @@ export interface FormFieldProps {
 
 // Textarea field types
 export interface TextareaFieldProps {
+  id?: string;
   label: string;
   value: string;
   onChange: (value: string) => void;
@@ -48,6 +50,7 @@ export interface SelectOption {
 }
 
 export interface SelectFieldProps {
+  id?: string;
   label: string;
   value: string;
   onChange: (value: string) => void;

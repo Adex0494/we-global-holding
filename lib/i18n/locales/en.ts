@@ -122,12 +122,19 @@ export const en = {
   imageComingSoon: 'Image coming soon',
   divisionStatus: 'Current Status',
   interestedInDivision: 'Interested in this division?',
-  requestAccess: 'Request Access',
+  signUpAndRequestAccess: 'Sign up and request access',
 
   // Form validation
+  requiredFieldsNote: 'Fields marked with * are required.',
   validationRequired: 'is required',
   validationValidEmail: 'Valid email is required',
   validationUrlFormat: 'URL must start with http:// or https://',
   validationMaxWords: 'Maximum',
   validationWords: 'words allowed',
+
+  // Backend error messages
+  errorUnauthorized: 'Unauthorized. Please log in to continue.',
+  errorMissingFields: 'Missing required fields. Please fill in all required fields.',
+  errorPendingRequest: 'A business access request is already pending for your account.',
+  errorInternalServer: 'Internal server error. Please try again later.',
 } as const;

@@ -3,13 +3,21 @@ import { prisma } from '@/lib/prisma';
 import { Prisma } from '@prisma/client';
 import { getSession } from '@/lib/auth';
 
+// Error codes that map to translation keys on the frontend
+export const ERROR_CODES = {
+  UNAUTHORIZED: 'UNAUTHORIZED',
+  MISSING_FIELDS: 'MISSING_FIELDS',
+  PENDING_REQUEST: 'PENDING_REQUEST',
+  INTERNAL_ERROR: 'INTERNAL_ERROR',
+} as const;
+
 export async function POST(req: Request) {
   try {
     // Get userId from session
     const session = await getSession();
     if (!session?.userId) {
       return NextResponse.json(
-        { ok: false, error: 'Unauthorized. Please log in to continue.' },
+        { ok: false, errorCode: ERROR_CODES.UNAUTHORIZED },
         { status: 401 }
       );
     }
@@ -56,7 +64,7 @@ export async function POST(req: Request) {
       return NextResponse.json(
         {
           ok: false,
-          error: 'Missing required fields',
+          errorCode: ERROR_CODES.MISSING_FIELDS,
           fields: missingFields,
         },
         { status: 400 }
@@ -75,7 +83,7 @@ export async function POST(req: Request) {
       return NextResponse.json(
         {
           ok: false,
-          error: 'A business access request is already pending for this user',
+          errorCode: ERROR_CODES.PENDING_REQUEST,
         },
         { status: 409 }
       );
@@ -111,7 +119,7 @@ export async function POST(req: Request) {
       return NextResponse.json(
         {
           ok: false,
-          error: error.message,
+          errorCode: ERROR_CODES.INTERNAL_ERROR,
         },
         { status: 400 }
       );
@@ -121,7 +129,7 @@ export async function POST(req: Request) {
     console.error('Unexpected business access error:', error);
 
     return NextResponse.json(
-      { ok: false, error: 'Internal server error' },
+      { ok: false, errorCode: ERROR_CODES.INTERNAL_ERROR },
       { status: 500 }
     );
   }

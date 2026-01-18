@@ -122,12 +122,19 @@ export const es = {
   imageComingSoon: 'Imagen próximamente',
   divisionStatus: 'Estado Actual',
   interestedInDivision: '¿Interesado en esta división?',
-  requestAccess: 'Solicitar Acceso',
+  signUpAndRequestAccess: 'Regístrate y solicita acceso',
 
   // Form validation
+  requiredFieldsNote: 'Los campos marcados con * son obligatorios.',
   validationRequired: 'es requerido',
   validationValidEmail: 'Se requiere un correo electrónico válido',
   validationUrlFormat: 'La URL debe comenzar con http:// o https://',
   validationMaxWords: 'Máximo',
   validationWords: 'palabras permitidas',
+
+  // Backend error messages
+  errorUnauthorized: 'No autorizado. Por favor inicia sesión para continuar.',
+  errorMissingFields: 'Faltan campos obligatorios. Por favor completa todos los campos requeridos.',
+  errorPendingRequest: 'Ya existe una solicitud de acceso empresarial pendiente para tu cuenta.',
+  errorInternalServer: 'Error interno del servidor. Por favor intenta más tarde.',
 } as const;

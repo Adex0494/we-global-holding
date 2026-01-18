@@ -72,12 +72,12 @@ describe('DivisionPage', () => {
     expect(statusElements.length).toBeGreaterThan(0);
   });
 
-  it('renders the request access link', () => {
+  it('renders the sign up and request access link', () => {
     useParams.mockReturnValue({ divisionId: 'jetline' });
     render(<DivisionPage />);
-    expect(screen.getByRole('link', { name: 'Request Access' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'Sign up and request access' })).toHaveAttribute(
       'href',
-      '/business-access/request'
+      '/login'
     );
   });
 });
