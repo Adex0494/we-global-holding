@@ -8,6 +8,7 @@ export interface Division {
   nameKey: TranslationKey;
   descriptionKey: TranslationKey;
   statusKey: TranslationKey;
+  image: string;
 }
 
 // Navigation types

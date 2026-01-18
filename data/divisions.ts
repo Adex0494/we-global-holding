@@ -18,6 +18,7 @@ export const divisions: Division[] = [
     nameKey: 'divisionVerifiedName',
     descriptionKey: 'divisionVerifiedDesc',
     statusKey: 'statusPreparationPhase',
+    image: '/division-images/we-global-verified.png',
   },
   {
     id: 'auto-match',
@@ -25,6 +26,7 @@ export const divisions: Division[] = [
     nameKey: 'divisionAutoMatchName',
     descriptionKey: 'divisionAutoMatchDesc',
     statusKey: 'statusInvestmentReadiness',
+    image: '/division-images/auto-match.png',
   },
   {
     id: 'property-networking',
@@ -32,6 +34,7 @@ export const divisions: Division[] = [
     nameKey: 'divisionPropertyName',
     descriptionKey: 'divisionPropertyDesc',
     statusKey: 'statusInvestmentReadiness',
+    image: '/division-images/property-networking.png',
   },
   {
     id: 'global-logistics',
@@ -39,6 +42,7 @@ export const divisions: Division[] = [
     nameKey: 'divisionLogisticsName',
     descriptionKey: 'divisionLogisticsDesc',
     statusKey: 'statusPreparationPhase',
+    image: '/division-images/global-logistics.png',
   },
   {
     id: 'franchising',
@@ -46,6 +50,7 @@ export const divisions: Division[] = [
     nameKey: 'divisionFranchisingName',
     descriptionKey: 'divisionFranchisingDesc',
     statusKey: 'statusPreparationPhase',
+    image: '/division-images/franchising.png',
   },
   {
     id: 'in-house-products',
@@ -53,6 +58,7 @@ export const divisions: Division[] = [
     nameKey: 'divisionProductsName',
     descriptionKey: 'divisionProductsDesc',
     statusKey: 'statusUnderDevelopment',
+    image: '/division-images/in-house-products.png',
   },
   {
     id: 'jetline',
@@ -60,6 +66,7 @@ export const divisions: Division[] = [
     nameKey: 'divisionJetLineName',
     descriptionKey: 'divisionJetLineDesc',
     statusKey: 'statusConceptToDeployment',
+    image: '/division-images/jetline.png',
   },
   {
     id: 'government-infrastructure',
@@ -67,6 +74,7 @@ export const divisions: Division[] = [
     nameKey: 'divisionGovernmentName',
     descriptionKey: 'divisionGovernmentDesc',
     statusKey: 'statusPreparationPhase',
+    image: '/division-images/government-infrastructure.png',
   },
   {
     id: 'technology',
@@ -74,5 +82,6 @@ export const divisions: Division[] = [
     nameKey: 'divisionTechnologyName',
     descriptionKey: 'divisionTechnologyDesc',
     statusKey: 'statusUnderDevelopment',
+    image: '/division-images/technology.png',
   },
 ];

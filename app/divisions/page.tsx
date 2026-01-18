@@ -2,6 +2,8 @@
 
 import { divisions } from '@/data/divisions';
 import { useTranslation } from '@/lib/i18n';
+import DivisionCard from '@/components/DivisionCard';
+import { GlassCard } from '@/components/ui';
 
 export default function DivisionsPage() {
   const { t } = useTranslation();
@@ -21,53 +23,25 @@ export default function DivisionsPage() {
 
       {/* DIVISIONS GRID */}
       <section className="grid md:grid-cols-2 gap-10">
-        {divisions.map((division) => {
-          const Icon = division.icon;
-
-          return (
-            <div key={division.id} className="glass-card p-8">
-              {/* TITLE + ICON */}
-              <div className="flex items-start gap-4 mb-4">
-                <div className="p-3 rounded-xl bg-black/5">
-                  <Icon className="w-6 h-6 text-black" />
-                </div>
-
-                <div>
-                  <h3 className="text-2xl font-semibold">{t(division.nameKey)}</h3>
-                </div>
-              </div>
-
-              {/* DESCRIPTION */}
-              <p className="text-gray-800 leading-relaxed mb-4">
-                {t(division.descriptionKey)}
-              </p>
-
-              {/* STATUS */}
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-600">{t('status')}:</span>
-                <span className="inline-block px-3 py-1 text-sm font-medium bg-black/5 rounded-full text-gray-800">
-                  {t(division.statusKey)}
-                </span>
-              </div>
-            </div>
-          );
-        })}
+        {divisions.map((division) => (
+          <DivisionCard key={division.id} division={division} showStatus />
+        ))}
       </section>
 
       {/* INVESTMENT POSITIONING */}
-      <section className="glass-card p-10">
+      <GlassCard as="section" enableHover={false} className="p-2">
         <h2 className="text-3xl font-bold mb-6">{t('investmentTitle')}</h2>
         <p className="text-gray-800 leading-relaxed text-lg">
           {t('investmentText')}
         </p>
-      </section>
+      </GlassCard>
 
       {/* CTA */}
-      <section className="glass-card p-10 text-center">
+      <GlassCard as="section" enableHover={false} className="p-2 text-center">
         <p className="text-gray-800 leading-relaxed text-lg">
           {t('ctaText')}
         </p>
-      </section>
+      </GlassCard>
     </main>
   );
 }
