@@ -23,7 +23,7 @@ export default function HomePage() {
 
         <Link
           href="/divisions"
-          className="glass-card group mt-8 inline-flex items-center justify-center px-10 py-3 rounded-full font-semibold text-black bg-white/30 backdrop-blur-md border border-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-all duration-300 ease-out hover:-translate-y-1 hover:bg-white/50 hover:shadow-[0_12px_40px_rgba(0,0,0,0.18)] focus:outline-none focus:ring-2 focus:ring-neutral-300 focus:ring-offset-2"
+          className="glass-card group mt-8 inline-flex items-center justify-center px-10 py-3 rounded-full font-semibold text-black bg-white/30 backdrop-blur-md border border-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-all duration-300 ease-out hover:-translate-y-1 hover:bg-white/50 hover:shadow-[0_12px_40px_rgba(0,0,0,0.18)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:ring-offset-2"
         >
           <span className="relative z-10">{t('homeExploreDivisions')}</span>
           <span className="pointer-events-none absolute inset-0 rounded-full opacity-0 bg-gradient-to-r from-transparent via-white/60 to-transparent translate-x-[-120%] transition-all duration-700 group-hover:opacity-100 group-hover:translate-x-[120%]" aria-hidden="true" />

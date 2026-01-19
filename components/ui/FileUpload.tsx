@@ -41,7 +41,7 @@ export default function FileUpload({
           disabled ? 'border-neutral-300' : 'border-white/40',
           'text-center',
           disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer',
-          'focus:outline-none focus:ring-2 focus:ring-neutral-300 focus:ring-offset-2',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:ring-offset-2',
         ].join(' ')}
       >
         <div className="flex flex-col items-center gap-2">

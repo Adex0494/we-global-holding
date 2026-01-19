@@ -1,22 +1,63 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { getSession } from '@/lib/auth';
+import { isValidUUID, sanitizeString } from '@/lib/validation';
+
+// Admin user IDs from environment variable (comma-separated)
+// In production, this should be a proper role system in the database
+const ADMIN_USER_IDS = (process.env.ADMIN_USER_IDS || '').split(',').filter(Boolean);
+
+/**
+ * Checks if a user ID is an admin
+ */
+function isAdmin(userId: string): boolean {
+  return ADMIN_USER_IDS.includes(userId);
+}
 
 export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params;
-    const body = await req.json();
-    const { decision, adminNotes } = body;
-
-    if (decision !== 'APPROVED' && decision !== 'DENIED') {
+    // Authentication check
+    const session = await getSession();
+    if (!session?.userId) {
       return NextResponse.json(
-        { ok: false, error: 'Invalid decision' },
+        { ok: false, error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    // Admin authorization check
+    if (!isAdmin(session.userId)) {
+      return NextResponse.json(
+        { ok: false, error: 'Forbidden: Admin access required' },
+        { status: 403 }
+      );
+    }
+
+    const { id } = await params;
+
+    // Validate UUID format
+    if (!isValidUUID(id)) {
+      return NextResponse.json(
+        { ok: false, error: 'Invalid request ID format' },
         { status: 400 }
       );
     }
 
+    const body = await req.json();
+    const { decision, adminNotes } = body;
+
+    // Validate decision
+    if (decision !== 'APPROVED' && decision !== 'DENIED') {
+      return NextResponse.json(
+        { ok: false, error: 'Invalid decision. Must be APPROVED or DENIED' },
+        { status: 400 }
+      );
+    }
+
+    // Find the request
     const request = await prisma.businessAccessRequest.findUnique({
       where: { id },
     });
@@ -28,6 +69,7 @@ export async function PATCH(
       );
     }
 
+    // Check if already processed
     if (request.status !== 'PENDING') {
       return NextResponse.json(
         { ok: false, error: 'Request already processed' },
@@ -35,13 +77,18 @@ export async function PATCH(
       );
     }
 
+    // Sanitize admin notes
+    const sanitizedNotes = adminNotes ? sanitizeString(adminNotes) : null;
+
+    // Update request and user atomically
     const [updatedRequest] = await prisma.$transaction([
       prisma.businessAccessRequest.update({
         where: { id },
         data: {
           status: decision,
+          reviewedBy: session.userId,
           reviewedAt: new Date(),
-          adminNotes: adminNotes || null,
+          adminNotes: sanitizedNotes,
         },
       }),
       prisma.user.update({

@@ -473,6 +473,7 @@ export default function BusinessAccessRequestPage() {
               {/* Submit Button */}
               <Button
                 type="submit"
+                disabled={!canSubmit}
                 isLoading={isSubmitting}
                 className="w-full"
               >

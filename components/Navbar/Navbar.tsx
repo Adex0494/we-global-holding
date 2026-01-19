@@ -55,7 +55,7 @@ function LanguageToggle({ locale, onLocaleChange }: LanguageToggleProps) {
         onClick={() => onLocaleChange('en')}
         aria-label="Switch to English"
         aria-pressed={locale === 'en'}
-        className={`relative z-10 w-9 h-7 text-xs font-semibold rounded-[10px] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-neutral-300 focus:ring-offset-1 ${
+        className={`relative z-10 w-9 h-7 text-xs font-semibold rounded-[10px] transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:ring-offset-1 ${
           locale === 'en' ? 'text-white' : 'text-black/70 hover:text-black'
         }`}
       >
@@ -67,7 +67,7 @@ function LanguageToggle({ locale, onLocaleChange }: LanguageToggleProps) {
         onClick={() => onLocaleChange('es')}
         aria-label="Cambiar a Español"
         aria-pressed={locale === 'es'}
-        className={`relative z-10 w-9 h-7 text-xs font-semibold rounded-[10px] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-neutral-300 focus:ring-offset-1 ${
+        className={`relative z-10 w-9 h-7 text-xs font-semibold rounded-[10px] transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:ring-offset-1 ${
           locale === 'es' ? 'text-white' : 'text-black/70 hover:text-black'
         }`}
       >
@@ -122,7 +122,7 @@ export default function Navbar() {
           {/* Logo */}
           <Link
             href="/"
-            className="flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-neutral-300 focus:ring-offset-2 rounded-lg"
+            className="flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:ring-offset-2 rounded-lg"
             onClick={closeMenu}
             aria-label="WE Global Holding Inc. - Go to homepage"
           >
@@ -156,7 +156,7 @@ export default function Navbar() {
             aria-expanded={menuOpen}
             aria-controls="mobile-drawer"
             aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
-            className="flex items-center justify-center w-10 h-10 rounded-2xl bg-white/35 border border-white/40 shadow-sm transition-all duration-200 hover:bg-white/50 hover:-translate-y-[1px] focus:outline-none focus:ring-2 focus:ring-neutral-300 focus:ring-offset-2"
+            className="flex items-center justify-center w-10 h-10 rounded-2xl bg-white/35 border border-white/40 shadow-sm transition-all duration-200 hover:bg-white/50 hover:-translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:ring-offset-2"
           >
             {menuOpen ? (
               <X className="w-5 h-5 text-black" aria-hidden="true" />
@@ -174,7 +174,7 @@ export default function Navbar() {
               href={item.href}
               role="menuitem"
               aria-current={activeHref === item.href ? 'page' : undefined}
-              className={`nav-link text-sm font-medium transition text-black focus:outline-none focus:ring-2 focus:ring-neutral-300 focus:ring-offset-2 rounded-md px-2 py-1 ${
+              className={`nav-link text-sm font-medium transition text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:ring-offset-2 rounded-md px-2 py-1 ${
                 activeHref === item.href
                   ? 'opacity-100'
                   : 'opacity-60 hover:opacity-100'
@@ -186,7 +186,7 @@ export default function Navbar() {
 
           <button
             type="button"
-            className="w-9 h-9 rounded-full bg-black/90 flex items-center justify-center text-white text-xs shadow-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-neutral-300 focus:ring-offset-2"
+            className="w-9 h-9 rounded-full bg-black/90 flex items-center justify-center text-white text-xs shadow-sm cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:ring-offset-2"
             aria-label="User profile menu"
           >
             N
@@ -252,7 +252,7 @@ export default function Navbar() {
               onClick={closeMenu}
               aria-label="Close navigation menu"
               tabIndex={menuOpen ? 0 : -1}
-              className="flex items-center justify-center w-10 h-10 rounded-2xl bg-white/35 border border-white/40 shadow-sm transition-all duration-200 hover:bg-white/50 hover:-translate-y-[1px] focus:outline-none focus:ring-2 focus:ring-neutral-300 focus:ring-offset-2"
+              className="flex items-center justify-center w-10 h-10 rounded-2xl bg-white/35 border border-white/40 shadow-sm transition-all duration-200 hover:bg-white/50 hover:-translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:ring-offset-2"
             >
               <X className="w-5 h-5 text-black" aria-hidden="true" />
             </button>
@@ -273,7 +273,7 @@ export default function Navbar() {
                       role="menuitem"
                       aria-current={isActive ? 'page' : undefined}
                       tabIndex={menuOpen ? 0 : -1}
-                      className={`group flex items-center justify-between rounded-2xl px-4 py-3 bg-white/30 border border-white/35 shadow-sm transition-all duration-200 hover:bg-white/45 hover:-translate-y-[1px] focus:outline-none focus:ring-2 focus:ring-neutral-300 focus:ring-offset-2 ${
+                      className={`group flex items-center justify-between rounded-2xl px-4 py-3 bg-white/30 border border-white/35 shadow-sm transition-all duration-200 hover:bg-white/45 hover:-translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:ring-offset-2 ${
                         isActive ? 'bg-white/55 border-white/55' : ''
                       }`}
                     >

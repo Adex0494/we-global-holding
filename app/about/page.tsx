@@ -42,7 +42,7 @@ export default function AboutPage() {
           </p>
           <Link
             href="/divisions"
-            className="inline-flex items-center justify-center px-8 py-3 rounded-full font-semibold text-black bg-white/30 backdrop-blur-md border border-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-all duration-300 ease-out hover:-translate-y-1 hover:bg-white/50 hover:shadow-[0_12px_40px_rgba(0,0,0,0.18)] focus:outline-none focus:ring-2 focus:ring-neutral-300 focus:ring-offset-2"
+            className="inline-flex items-center justify-center px-8 py-3 rounded-full font-semibold text-black bg-white/30 backdrop-blur-md border border-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-all duration-300 ease-out hover:-translate-y-1 hover:bg-white/50 hover:shadow-[0_12px_40px_rgba(0,0,0,0.18)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:ring-offset-2"
           >
             {t('homeExploreDivisions')}
           </Link>

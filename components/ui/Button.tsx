@@ -33,7 +33,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         className={[
           'font-medium transition-all duration-200',
           'shadow-sm active:translate-y-0',
-          'focus:outline-none focus:ring-2 focus:ring-neutral-300 focus:ring-offset-2',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:ring-offset-2',
           'disabled:opacity-50 disabled:cursor-not-allowed',
           variantStyles[variant],
           sizeStyles[size],

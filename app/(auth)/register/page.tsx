@@ -196,7 +196,7 @@ export default function RegisterPage() {
                 Already have an account?{' '}
                 <Link
                   href="/login"
-                  className="font-medium text-neutral-900 underline decoration-neutral-400 hover:decoration-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-300 focus:ring-offset-2 rounded"
+                  className="font-medium text-neutral-900 underline decoration-neutral-400 hover:decoration-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:ring-offset-2 rounded"
                 >
                   Sign in
                 </Link>

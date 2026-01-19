@@ -30,7 +30,7 @@ export default function DivisionPage() {
       <nav aria-label="Breadcrumb">
         <Link
           href="/divisions"
-          className="inline-flex items-center gap-2 text-gray-700 hover:text-black transition-colors focus:outline-none focus:ring-2 focus:ring-neutral-300 focus:ring-offset-2 rounded-lg px-2 py-1"
+          className="inline-flex items-center gap-2 text-gray-700 hover:text-black transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:ring-offset-2 rounded-lg px-2 py-1"
         >
           <ArrowLeft className="w-4 h-4" aria-hidden="true" />
           <span>{t('backToDivisions')}</span>
@@ -103,7 +103,7 @@ export default function DivisionPage() {
             <h3 id="interested-heading" className="text-lg font-semibold">{t('interestedInDivision')}</h3>
             <Link
               href="/login"
-              className="inline-flex items-center justify-center px-6 py-2.5 rounded-full font-semibold text-black bg-white/30 backdrop-blur-md border border-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-all duration-300 ease-out hover:-translate-y-1 hover:bg-white/50 hover:shadow-[0_12px_40px_rgba(0,0,0,0.18)] focus:outline-none focus:ring-2 focus:ring-neutral-300 focus:ring-offset-2"
+              className="inline-flex items-center justify-center px-6 py-2.5 rounded-full font-semibold text-black bg-white/30 backdrop-blur-md border border-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-all duration-300 ease-out hover:-translate-y-1 hover:bg-white/50 hover:shadow-[0_12px_40px_rgba(0,0,0,0.18)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:ring-offset-2"
             >
               {t('signUpAndRequestAccess')}
             </Link>

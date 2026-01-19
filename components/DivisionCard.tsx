@@ -18,7 +18,7 @@ export default function DivisionCard({ division, showStatus = false }: DivisionC
   return (
     <Link
       href={`/divisions/${division.id}`}
-      className="block group focus:outline-none focus:ring-2 focus:ring-neutral-300 focus:ring-offset-2 rounded-3xl"
+      className="block group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:ring-offset-2 rounded-3xl"
       aria-label={`${divisionName} - ${t('learnMore')}`}
     >
       <GlassCard className="h-full" as="article">

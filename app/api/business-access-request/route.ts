@@ -2,12 +2,24 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { Prisma } from '@prisma/client';
 import { getSession } from '@/lib/auth';
+import {
+  isValidEmail,
+  isValidURL,
+  isValidCompanyType,
+  isWithinWordLimit,
+  sanitizeString,
+  sanitizeEmail,
+  type ValidationError,
+} from '@/lib/validation';
+import { VALIDATION } from '@/lib/constants';
 
 // Error codes that map to translation keys on the frontend
 export const ERROR_CODES = {
   UNAUTHORIZED: 'UNAUTHORIZED',
   MISSING_FIELDS: 'MISSING_FIELDS',
+  VALIDATION_ERROR: 'VALIDATION_ERROR',
   PENDING_REQUEST: 'PENDING_REQUEST',
+  ALREADY_APPROVED: 'ALREADY_APPROVED',
   INTERNAL_ERROR: 'INTERNAL_ERROR',
 } as const;
 
@@ -23,6 +35,36 @@ export async function POST(req: Request) {
     }
 
     const userId = session.userId;
+
+    // Check if user already has approved access or pending request
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { accessStatus: true },
+    });
+
+    if (!user) {
+      return NextResponse.json(
+        { ok: false, errorCode: ERROR_CODES.UNAUTHORIZED },
+        { status: 401 }
+      );
+    }
+
+    // Prevent submission if user already has approved access
+    if (user.accessStatus === 'APPROVED') {
+      return NextResponse.json(
+        { ok: false, errorCode: ERROR_CODES.ALREADY_APPROVED },
+        { status: 409 }
+      );
+    }
+
+    // Check for existing pending request
+    if (user.accessStatus === 'PENDING') {
+      return NextResponse.json(
+        { ok: false, errorCode: ERROR_CODES.PENDING_REQUEST },
+        { status: 409 }
+      );
+    }
+
     const body = await req.json();
 
     const {
@@ -42,8 +84,7 @@ export async function POST(req: Request) {
       interestExplanation,
     } = body;
 
-    // Basic required-field validation (app-level)
-    // Note: userId is obtained from session, not request body
+    // Basic required-field validation
     const requiredFields = [
       'legalCompanyName',
       'incorporationCountry',
@@ -71,7 +112,80 @@ export async function POST(req: Request) {
       );
     }
 
-    // Check for existing pending request for the same user
+    // Collect validation errors
+    const errors: ValidationError[] = [];
+
+    // Sanitize inputs
+    const sanitizedData = {
+      legalCompanyName: sanitizeString(legalCompanyName),
+      incorporationCountry: sanitizeString(incorporationCountry),
+      incorporationState: incorporationState ? sanitizeString(incorporationState) : null,
+      registrationNumber: sanitizeString(registrationNumber),
+      companyType: sanitizeString(companyType),
+      businessAddress: sanitizeString(businessAddress),
+      website: website ? sanitizeString(website) : null,
+      corporateEmail: sanitizeEmail(corporateEmail),
+      industry: sanitizeString(industry),
+      description: sanitizeString(description),
+      socialLink: socialLink ? sanitizeString(socialLink) : null,
+      representativeName: sanitizeString(representativeName),
+      representativePosition: sanitizeString(representativePosition),
+      interestExplanation: sanitizeString(interestExplanation),
+    };
+
+    // Validate company type is a valid enum
+    if (!isValidCompanyType(sanitizedData.companyType)) {
+      errors.push({
+        field: 'companyType',
+        message: 'Invalid company type. Must be LLC, CORP, SRL, or OTHER',
+      });
+    }
+
+    // Validate corporate email format
+    if (!isValidEmail(sanitizedData.corporateEmail)) {
+      errors.push({
+        field: 'corporateEmail',
+        message: 'Invalid email format',
+      });
+    }
+
+    // Validate website URL format if provided
+    if (sanitizedData.website && !isValidURL(sanitizedData.website)) {
+      errors.push({
+        field: 'website',
+        message: 'Invalid URL format. Must start with http:// or https://',
+      });
+    }
+
+    // Validate social link URL format if provided
+    if (sanitizedData.socialLink && !isValidURL(sanitizedData.socialLink)) {
+      errors.push({
+        field: 'socialLink',
+        message: 'Invalid URL format. Must start with http:// or https://',
+      });
+    }
+
+    // Validate interest explanation word count
+    if (!isWithinWordLimit(sanitizedData.interestExplanation)) {
+      errors.push({
+        field: 'interestExplanation',
+        message: `Interest explanation must not exceed ${VALIDATION.MAX_INTEREST_WORDS} words`,
+      });
+    }
+
+    // Return validation errors if any
+    if (errors.length > 0) {
+      return NextResponse.json(
+        {
+          ok: false,
+          errorCode: ERROR_CODES.VALIDATION_ERROR,
+          errors,
+        },
+        { status: 400 }
+      );
+    }
+
+    // Double-check for existing pending request (race condition protection)
     const existingRequest = await prisma.businessAccessRequest.findFirst({
       where: {
         userId,
@@ -89,26 +203,33 @@ export async function POST(req: Request) {
       );
     }
 
-    const request = await prisma.businessAccessRequest.create({
-      data: {
-        userId,
-        legalCompanyName,
-        incorporationCountry,
-        incorporationState: incorporationState || null,
-        registrationNumber,
-        companyType,
-        businessAddress,
-        website: website || null,
-        corporateEmail,
-        industry,
-        description,
-        socialLink: socialLink || null,
-        representativeName,
-        representativePosition,
-        interestExplanation,
-        status: 'PENDING',
-      },
-    });
+    // Create request and update user status atomically
+    const [request] = await prisma.$transaction([
+      prisma.businessAccessRequest.create({
+        data: {
+          userId,
+          legalCompanyName: sanitizedData.legalCompanyName,
+          incorporationCountry: sanitizedData.incorporationCountry,
+          incorporationState: sanitizedData.incorporationState,
+          registrationNumber: sanitizedData.registrationNumber,
+          companyType: sanitizedData.companyType as 'LLC' | 'CORP' | 'SRL' | 'OTHER',
+          businessAddress: sanitizedData.businessAddress,
+          website: sanitizedData.website,
+          corporateEmail: sanitizedData.corporateEmail,
+          industry: sanitizedData.industry,
+          description: sanitizedData.description,
+          socialLink: sanitizedData.socialLink,
+          representativeName: sanitizedData.representativeName,
+          representativePosition: sanitizedData.representativePosition,
+          interestExplanation: sanitizedData.interestExplanation,
+          status: 'PENDING',
+        },
+      }),
+      prisma.user.update({
+        where: { id: userId },
+        data: { accessStatus: 'PENDING' },
+      }),
+    ]);
 
     return NextResponse.json({ ok: true, request }, { status: 201 });
   } catch (error) {

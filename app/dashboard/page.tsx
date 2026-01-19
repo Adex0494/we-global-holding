@@ -20,7 +20,7 @@ export default function DashboardPage() {
         <nav aria-label="Dashboard actions">
           <Link
             href="/business-access/request"
-            className="block group focus:outline-none focus:ring-2 focus:ring-neutral-300 focus:ring-offset-2 rounded-3xl"
+            className="block group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:ring-offset-2 rounded-3xl"
             aria-label={`${t('dashboardBusinessAccessTitle')} - ${t('dashboardBusinessAccessDesc')}`}
           >
             <GlassCard className="cursor-pointer">
