@@ -13,15 +13,20 @@ interface DivisionCardProps {
 export default function DivisionCard({ division, showStatus = false }: DivisionCardProps) {
   const Icon = division.icon;
   const { t } = useTranslation();
+  const divisionName = t(division.nameKey);
 
   return (
-    <Link href={`/divisions/${division.id}`} className="block group">
-      <GlassCard className="h-full">
+    <Link
+      href={`/divisions/${division.id}`}
+      className="block group focus:outline-none focus:ring-2 focus:ring-neutral-300 focus:ring-offset-2 rounded-3xl"
+      aria-label={`${divisionName} - ${t('learnMore')}`}
+    >
+      <GlassCard className="h-full" as="article">
         <div className="flex items-start gap-4 mb-4">
-          <div className="p-3 rounded-xl bg-black/5">
+          <div className="p-3 rounded-xl bg-black/5" aria-hidden="true">
             <Icon className="w-6 h-6 text-black" />
           </div>
-          <h3 className="text-xl font-semibold">{t(division.nameKey)}</h3>
+          <h3 className="text-xl font-semibold">{divisionName}</h3>
         </div>
 
         <p className="text-gray-700 text-sm leading-relaxed mb-6">
@@ -37,7 +42,7 @@ export default function DivisionCard({ division, showStatus = false }: DivisionC
           </div>
         )}
 
-        <span className="inline-flex items-center text-sm font-medium text-black">
+        <span className="inline-flex items-center text-sm font-medium text-black" aria-hidden="true">
           {t('learnMore')}
           <span className="ml-2 transition-transform group-hover:translate-x-1">
             →

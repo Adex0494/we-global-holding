@@ -238,24 +238,30 @@ export default function BusinessAccessRequestPage() {
   }
 
   return (
-    <main className="min-h-screen pt-24 pb-12 flex items-start justify-center px-4">
+    <main className="min-h-screen pt-24 pb-12 flex items-start justify-center px-4" role="main">
       <div className="w-full max-w-4xl">
         <GlassCard enableHover={false}>
           <div className="p-6 md:p-8">
             <header className="mb-8">
-              <h1 className="text-2xl md:text-3xl font-semibold text-neutral-900">
+              <h1 id="business-access-heading" className="text-2xl md:text-3xl font-semibold text-neutral-900">
                 {t('businessAccessTitle')}
               </h1>
-              <p className="mt-2 text-sm md:text-base text-neutral-700">
+              <p id="business-access-description" className="mt-2 text-sm md:text-base text-neutral-700">
                 {t('businessAccessSubtitle')} {t('siteName')} {t('businessAccessEcosystem')}
               </p>
-              <p className="mt-3 text-sm text-neutral-600">
+              <p id="required-fields-note" className="mt-3 text-sm text-neutral-600">
                 <span className="text-red-500" aria-hidden="true">*</span>{' '}
                 {t('requiredFieldsNote')}
               </p>
             </header>
 
-            <form onSubmit={onSubmit} className="space-y-8" noValidate>
+            <form
+              onSubmit={onSubmit}
+              className="space-y-8"
+              noValidate
+              aria-labelledby="business-access-heading"
+              aria-describedby="business-access-description required-fields-note"
+            >
               {/* Section 1: Company Information */}
               <section aria-labelledby="company-info-heading">
                 <h2 id="company-info-heading" className="text-lg font-semibold text-neutral-900 mb-4">
@@ -447,6 +453,7 @@ export default function BusinessAccessRequestPage() {
               {serverError && (
                 <div
                   role="alert"
+                  aria-live="assertive"
                   className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
                 >
                   {serverError}
@@ -456,6 +463,7 @@ export default function BusinessAccessRequestPage() {
               {successMsg && (
                 <div
                   role="status"
+                  aria-live="polite"
                   className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800"
                 >
                   {successMsg}

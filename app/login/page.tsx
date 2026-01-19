@@ -64,20 +64,26 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="h-screen pt-16 flex items-center justify-center px-4">
+    <main className="h-screen pt-16 flex items-center justify-center px-4" role="main">
       <div className="w-full max-w-md">
         <GlassCard enableHover={false}>
           <div className="p-6 md:p-8">
             <header className="mb-6">
-              <h1 className="text-2xl md:text-3xl font-semibold text-neutral-900">
+              <h1 id="login-heading" className="text-2xl md:text-3xl font-semibold text-neutral-900">
                 {t('loginWelcomeBack')}
               </h1>
-              <p className="mt-2 text-sm md:text-base text-neutral-700">
+              <p id="login-description" className="mt-2 text-sm md:text-base text-neutral-700">
                 {t('loginSignInTo')} {t('siteName')} {t('loginAccount')}
               </p>
             </header>
 
-            <form onSubmit={onSubmit} className="space-y-5">
+            <form
+              onSubmit={onSubmit}
+              className="space-y-5"
+              aria-labelledby="login-heading"
+              aria-describedby="login-description"
+              noValidate
+            >
               <Input
                 label={t('loginEmail')}
                 value={email}
@@ -85,6 +91,7 @@ export default function LoginPage() {
                 placeholder={t('loginEmailPlaceholder')}
                 autoComplete="email"
                 type="email"
+                required
               />
               <Input
                 label={t('loginPassword')}
@@ -93,10 +100,15 @@ export default function LoginPage() {
                 placeholder={t('loginPasswordPlaceholder')}
                 autoComplete="current-password"
                 type="password"
+                required
               />
 
               {serverError && (
-                <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                <div
+                  role="alert"
+                  aria-live="assertive"
+                  className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+                >
                   {serverError}
                 </div>
               )}
@@ -114,7 +126,7 @@ export default function LoginPage() {
                 {t('loginNoAccount')}{' '}
                 <Link
                   href="/register"
-                  className="font-medium text-neutral-900 underline decoration-neutral-400 hover:decoration-neutral-900"
+                  className="font-medium text-neutral-900 underline decoration-neutral-400 hover:decoration-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-300 focus:ring-offset-2 rounded"
                 >
                   {t('loginCreateOne')}
                 </Link>

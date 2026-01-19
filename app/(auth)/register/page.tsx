@@ -94,21 +94,27 @@ export default function RegisterPage() {
   }
 
   return (
-    <main className="h-screen pt-16 flex items-center justify-center px-4">
+    <main className="h-screen pt-16 flex items-center justify-center px-4" role="main">
       <div className="w-full max-w-2xl">
         <GlassCard enableHover={false}>
           <div className="p-6 md:p-8">
             <header className="mb-6">
-              <h1 className="text-2xl md:text-3xl font-semibold text-neutral-900">
+              <h1 id="register-heading" className="text-2xl md:text-3xl font-semibold text-neutral-900">
                 Create your account to get started
               </h1>
-              <p className="mt-2 text-sm md:text-base text-neutral-700">
+              <p id="register-description" className="mt-2 text-sm md:text-base text-neutral-700">
                 Access the {SITE_NAME} ecosystem with a premium, verified
                 experience.
               </p>
             </header>
 
-            <form onSubmit={onSubmit} className="space-y-5">
+            <form
+              onSubmit={onSubmit}
+              className="space-y-5"
+              aria-labelledby="register-heading"
+              aria-describedby="register-description"
+              noValidate
+            >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Input
                   label="Full name"
@@ -116,6 +122,7 @@ export default function RegisterPage() {
                   onChange={(v) => update('fullName', v)}
                   placeholder="e.g. Ariangel Díaz"
                   autoComplete="name"
+                  required
                 />
                 <Input
                   label="Email"
@@ -124,6 +131,7 @@ export default function RegisterPage() {
                   placeholder="you@company.com"
                   autoComplete="email"
                   type="email"
+                  required
                 />
                 <Input
                   label="Password"
@@ -132,6 +140,7 @@ export default function RegisterPage() {
                   placeholder="Minimum 8 characters"
                   autoComplete="new-password"
                   type="password"
+                  required
                 />
                 <Input
                   label="Date of birth"
@@ -139,6 +148,7 @@ export default function RegisterPage() {
                   onChange={(v) => update('dateOfBirth', v)}
                   type="date"
                   autoComplete="bday"
+                  required
                 />
                 <div className="md:col-span-2">
                   <Input
@@ -148,18 +158,27 @@ export default function RegisterPage() {
                     placeholder="+1 (809) 000-0000"
                     autoComplete="tel"
                     type="tel"
+                    required
                   />
                 </div>
               </div>
 
               {serverError && (
-                <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                <div
+                  role="alert"
+                  aria-live="assertive"
+                  className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+                >
                   {serverError}
                 </div>
               )}
 
               {successMsg && (
-                <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+                <div
+                  role="status"
+                  aria-live="polite"
+                  className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800"
+                >
                   {successMsg}
                 </div>
               )}
@@ -177,7 +196,7 @@ export default function RegisterPage() {
                 Already have an account?{' '}
                 <Link
                   href="/login"
-                  className="font-medium text-neutral-900 underline decoration-neutral-400 hover:decoration-neutral-900"
+                  className="font-medium text-neutral-900 underline decoration-neutral-400 hover:decoration-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-300 focus:ring-offset-2 rounded"
                 >
                   Sign in
                 </Link>

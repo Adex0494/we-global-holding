@@ -22,15 +22,18 @@ const sizeStyles: Record<ButtonSize, string> = {
 };
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ variant = 'primary', size = 'md', isLoading, className = '', children, disabled, ...props }, ref) => {
+  ({ variant = 'primary', size = 'md', isLoading, className = '', children, disabled, 'aria-label': ariaLabel, ...props }, ref) => {
     return (
       <button
         ref={ref}
         disabled={disabled || isLoading}
+        aria-disabled={disabled || isLoading}
+        aria-busy={isLoading}
+        aria-label={ariaLabel}
         className={[
           'font-medium transition-all duration-200',
           'shadow-sm active:translate-y-0',
-          'focus:outline-none focus:ring-2 focus:ring-neutral-300',
+          'focus:outline-none focus:ring-2 focus:ring-neutral-300 focus:ring-offset-2',
           'disabled:opacity-50 disabled:cursor-not-allowed',
           variantStyles[variant],
           sizeStyles[size],

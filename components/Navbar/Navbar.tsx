@@ -37,18 +37,25 @@ interface LanguageToggleProps {
 
 function LanguageToggle({ locale, onLocaleChange }: LanguageToggleProps) {
   return (
-    <div className="relative flex items-center h-8 p-0.5 rounded-xl bg-white/30 border border-white/40 shadow-sm">
+    <div
+      className="relative flex items-center h-8 p-0.5 rounded-xl bg-white/30 border border-white/40 shadow-sm"
+      role="group"
+      aria-label="Language selection"
+    >
       {/* Sliding indicator */}
       <div
         className={`absolute h-7 w-9 rounded-[10px] bg-black/90 shadow-sm transition-transform duration-200 ease-out ${
           locale === 'es' ? 'translate-x-[calc(100%+2px)]' : 'translate-x-0'
         }`}
+        aria-hidden="true"
       />
       {/* EN button */}
       <button
         type="button"
         onClick={() => onLocaleChange('en')}
-        className={`relative z-10 w-9 h-7 text-xs font-semibold rounded-[10px] transition-colors duration-200 ${
+        aria-label="Switch to English"
+        aria-pressed={locale === 'en'}
+        className={`relative z-10 w-9 h-7 text-xs font-semibold rounded-[10px] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-neutral-300 focus:ring-offset-1 ${
           locale === 'en' ? 'text-white' : 'text-black/70 hover:text-black'
         }`}
       >
@@ -58,7 +65,9 @@ function LanguageToggle({ locale, onLocaleChange }: LanguageToggleProps) {
       <button
         type="button"
         onClick={() => onLocaleChange('es')}
-        className={`relative z-10 w-9 h-7 text-xs font-semibold rounded-[10px] transition-colors duration-200 ${
+        aria-label="Cambiar a Español"
+        aria-pressed={locale === 'es'}
+        className={`relative z-10 w-9 h-7 text-xs font-semibold rounded-[10px] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-neutral-300 focus:ring-offset-1 ${
           locale === 'es' ? 'text-white' : 'text-black/70 hover:text-black'
         }`}
       >
@@ -102,22 +111,28 @@ export default function Navbar() {
   }, [menuOpen]);
 
   return (
-    <header className="fixed top-0 left-0 w-full z-40">
+    <header className="fixed top-0 left-0 w-full z-40" role="banner">
       {/* NAVBAR */}
-      <nav className="glass-navbar flex items-center justify-between px-6 md:px-16 py-4">
+      <nav className="glass-navbar flex items-center justify-between px-6 md:px-16 py-4" aria-label="Main navigation">
         {/* Left section: Language Toggle + Logo */}
         <div className="flex items-center gap-4">
           {/* Language Toggle */}
           <LanguageToggle locale={locale} onLocaleChange={setLocale} />
 
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2" onClick={closeMenu}>
+          <Link
+            href="/"
+            className="flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-neutral-300 focus:ring-offset-2 rounded-lg"
+            onClick={closeMenu}
+            aria-label="WE Global Holding Inc. - Go to homepage"
+          >
           <Image
             src="/logo-we.png"
-            alt="WE Logo"
+            alt=""
             width={24}
             height={24}
             className="opacity-90"
+            aria-hidden="true"
           />
           <span className="text-lg font-semibold tracking-wide text-black">
             Global Holding Inc.
@@ -127,7 +142,11 @@ export default function Navbar() {
 
         {/* MOBILE ACTIONS */}
         <div className="flex items-center gap-3 md:hidden">
-          <div className="w-9 h-9 rounded-full bg-black/90 flex items-center justify-center text-white text-xs shadow-sm">
+          <div
+            className="w-9 h-9 rounded-full bg-black/90 flex items-center justify-center text-white text-xs shadow-sm"
+            role="img"
+            aria-label="User avatar"
+          >
             N
           </div>
 
@@ -136,23 +155,26 @@ export default function Navbar() {
             onClick={toggleMenu}
             aria-expanded={menuOpen}
             aria-controls="mobile-drawer"
-            className="flex items-center justify-center w-10 h-10 rounded-2xl bg-white/35 border border-white/40 shadow-sm transition-all duration-200 hover:bg-white/50 hover:-translate-y-[1px] focus:outline-none focus:ring-2 focus:ring-neutral-300"
+            aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            className="flex items-center justify-center w-10 h-10 rounded-2xl bg-white/35 border border-white/40 shadow-sm transition-all duration-200 hover:bg-white/50 hover:-translate-y-[1px] focus:outline-none focus:ring-2 focus:ring-neutral-300 focus:ring-offset-2"
           >
             {menuOpen ? (
-              <X className="w-5 h-5 text-black" />
+              <X className="w-5 h-5 text-black" aria-hidden="true" />
             ) : (
-              <Menu className="w-5 h-5 text-black" />
+              <Menu className="w-5 h-5 text-black" aria-hidden="true" />
             )}
           </button>
         </div>
 
         {/* DESKTOP NAV */}
-        <div className="hidden md:flex items-center gap-10">
+        <div className="hidden md:flex items-center gap-10" role="menubar">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className={`nav-link text-sm font-medium transition text-black ${
+              role="menuitem"
+              aria-current={activeHref === item.href ? 'page' : undefined}
+              className={`nav-link text-sm font-medium transition text-black focus:outline-none focus:ring-2 focus:ring-neutral-300 focus:ring-offset-2 rounded-md px-2 py-1 ${
                 activeHref === item.href
                   ? 'opacity-100'
                   : 'opacity-60 hover:opacity-100'
@@ -162,9 +184,13 @@ export default function Navbar() {
             </Link>
           ))}
 
-          <div className="w-9 h-9 rounded-full bg-black/90 flex items-center justify-center text-white text-xs shadow-sm cursor-pointer">
+          <button
+            type="button"
+            className="w-9 h-9 rounded-full bg-black/90 flex items-center justify-center text-white text-xs shadow-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-neutral-300 focus:ring-offset-2"
+            aria-label="User profile menu"
+          >
             N
-          </div>
+          </button>
         </div>
       </nav>
 
@@ -175,11 +201,13 @@ export default function Navbar() {
             ? 'visible pointer-events-auto'
             : 'invisible pointer-events-none'
         }`}
+        aria-hidden={!menuOpen}
       >
         {/* Backdrop */}
         <button
           onClick={closeMenu}
-          aria-label="Close menu"
+          aria-label="Close navigation menu"
+          tabIndex={menuOpen ? 0 : -1}
           className={`absolute inset-0 bg-black/10 backdrop-blur-[2px] transition-opacity duration-300 ${
             menuOpen ? 'opacity-100' : 'opacity-0'
           }`}
@@ -190,6 +218,7 @@ export default function Navbar() {
           id="mobile-drawer"
           role="dialog"
           aria-modal="true"
+          aria-label="Navigation menu"
           className={`relative h-full w-[88%] max-w-sm glass-card p-6
             rounded-l-[22px] rounded-r-none
             border-l border-white/30 border-r-0
@@ -204,8 +233,12 @@ export default function Navbar() {
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-black/90 flex items-center justify-center text-white shadow-sm">
-                <User className="w-5 h-5" />
+              <div
+                className="w-10 h-10 rounded-2xl bg-black/90 flex items-center justify-center text-white shadow-sm"
+                role="img"
+                aria-label="User avatar"
+              >
+                <User className="w-5 h-5" aria-hidden="true" />
               </div>
               <div>
                 <p className="text-sm font-semibold text-neutral-900">
@@ -217,45 +250,54 @@ export default function Navbar() {
 
             <button
               onClick={closeMenu}
-              className="flex items-center justify-center w-10 h-10 rounded-2xl bg-white/35 border border-white/40 shadow-sm transition-all duration-200 hover:bg-white/50 hover:-translate-y-[1px] focus:outline-none focus:ring-2 focus:ring-neutral-300"
+              aria-label="Close navigation menu"
+              tabIndex={menuOpen ? 0 : -1}
+              className="flex items-center justify-center w-10 h-10 rounded-2xl bg-white/35 border border-white/40 shadow-sm transition-all duration-200 hover:bg-white/50 hover:-translate-y-[1px] focus:outline-none focus:ring-2 focus:ring-neutral-300 focus:ring-offset-2"
             >
-              <X className="w-5 h-5 text-black" />
+              <X className="w-5 h-5 text-black" aria-hidden="true" />
             </button>
           </div>
 
           {/* Links */}
-          <div className="space-y-2">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = item.href === activeHref;
+          <nav aria-label="Mobile navigation">
+            <ul className="space-y-2" role="menu">
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = item.href === activeHref;
 
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={closeMenu}
-                  className={`group flex items-center justify-between rounded-2xl px-4 py-3 bg-white/30 border border-white/35 shadow-sm transition-all duration-200 hover:bg-white/45 hover:-translate-y-[1px] ${
-                    isActive ? 'bg-white/55 border-white/55' : ''
-                  }`}
-                >
-                  <span className="flex items-center gap-3">
-                    <span
-                      className={`w-9 h-9 rounded-xl bg-black/5 flex items-center justify-center ${
-                        isActive ? 'bg-black/10' : ''
+                return (
+                  <li key={item.href} role="none">
+                    <Link
+                      href={item.href}
+                      onClick={closeMenu}
+                      role="menuitem"
+                      aria-current={isActive ? 'page' : undefined}
+                      tabIndex={menuOpen ? 0 : -1}
+                      className={`group flex items-center justify-between rounded-2xl px-4 py-3 bg-white/30 border border-white/35 shadow-sm transition-all duration-200 hover:bg-white/45 hover:-translate-y-[1px] focus:outline-none focus:ring-2 focus:ring-neutral-300 focus:ring-offset-2 ${
+                        isActive ? 'bg-white/55 border-white/55' : ''
                       }`}
                     >
-                      <Icon className="w-5 h-5 text-black" />
-                    </span>
-                    <span className="text-sm font-medium text-neutral-900">
-                      {t(item.labelKey)}
-                    </span>
-                  </span>
+                      <span className="flex items-center gap-3">
+                        <span
+                          className={`w-9 h-9 rounded-xl bg-black/5 flex items-center justify-center ${
+                            isActive ? 'bg-black/10' : ''
+                          }`}
+                          aria-hidden="true"
+                        >
+                          <Icon className="w-5 h-5 text-black" />
+                        </span>
+                        <span className="text-sm font-medium text-neutral-900">
+                          {t(item.labelKey)}
+                        </span>
+                      </span>
 
-                  <ChevronRight className="w-4 h-4 text-neutral-600 transition-transform group-hover:translate-x-1" />
-                </Link>
-              );
-            })}
-          </div>
+                      <ChevronRight className="w-4 h-4 text-neutral-600 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
 
           {/* Footer */}
           <div className="mt-6 pt-6 border-t border-white/30">

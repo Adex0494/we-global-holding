@@ -5,6 +5,9 @@ interface GlassCardProps {
   children: React.ReactNode;
   className?: string;
   as?: 'div' | 'section' | 'article';
+  role?: 'region' | 'group' | 'article' | 'form';
+  'aria-label'?: string;
+  'aria-labelledby'?: string;
 
   // Base styling
   borderRadius?: string;
@@ -82,6 +85,9 @@ export default function GlassCard({
   children,
   className = '',
   as: Component = 'div',
+  role,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledby,
 
   // Defaults matching original CSS
   borderRadius = '22px',
@@ -211,6 +217,9 @@ export default function GlassCard({
     <Component
       className={`${styles.glassCard} ${enableHover ? styles.enableHover : ''} p-8 ${className}`}
       style={cssVariables}
+      role={role}
+      aria-label={ariaLabel}
+      aria-labelledby={ariaLabelledby}
     >
       {children}
     </Component>
