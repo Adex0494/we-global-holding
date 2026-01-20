@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import Navbar from '@/components/Navbar';
+import SessionRehydrator from '@/components/SessionRehydrator';
 import { LanguageProvider } from '@/lib/i18n';
 
 export const metadata: Metadata = {
@@ -37,6 +38,7 @@ export default function RootLayout({
         </div>
 
         <LanguageProvider>
+          <SessionRehydrator />
           <Navbar />
           <div id="main-content">
             {children}

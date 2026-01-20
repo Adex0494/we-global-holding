@@ -92,7 +92,7 @@ export default function Navbar() {
   const closeMenu = () => setMenuOpen(false);
   const toggleMenu = () => setMenuOpen((v) => !v);
 
-  // Fetch session on mount
+  // Fetch session on mount and when pathname changes (for login/logout reactivity)
   useEffect(() => {
     async function fetchSession() {
       try {
@@ -110,7 +110,7 @@ export default function Navbar() {
       }
     }
     fetchSession();
-  }, []);
+  }, [pathname]);
 
   // Logout handler
   const handleLogout = useCallback(async () => {
