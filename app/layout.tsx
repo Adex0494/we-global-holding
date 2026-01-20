@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
+import { cookies, headers } from 'next/headers';
 import './globals.css';
 import Navbar from '@/components/Navbar';
 import SessionRehydrator from '@/components/SessionRehydrator';
-import { LanguageProvider } from '@/lib/i18n';
+import { LanguageProvider, LANGUAGE_COOKIE_NAME } from '@/lib/i18n';
+import type { Locale } from '@/lib/i18n';
 
 export const metadata: Metadata = {
   title: 'WE Global Holding Inc.',
@@ -12,13 +14,36 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+async function getInitialLocale(): Promise<Locale> {
+  const cookieStore = await cookies();
+  const localeCookie = cookieStore.get(LANGUAGE_COOKIE_NAME)?.value;
+
+  // If cookie exists and is valid, use it
+  if (localeCookie === 'en' || localeCookie === 'es') {
+    return localeCookie;
+  }
+
+  // Otherwise, detect from Accept-Language header
+  const headersList = await headers();
+  const acceptLanguage = headersList.get('accept-language') || '';
+
+  // Check if Spanish is preferred
+  if (acceptLanguage.toLowerCase().includes('es')) {
+    return 'es';
+  }
+
+  return 'en';
+}
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const initialLocale = await getInitialLocale();
+
   return (
-    <html lang="en">
+    <html lang={initialLocale}>
       <body className="relative min-h-screen text-black">
         {/* Skip to main content link for keyboard users */}
         <a
@@ -37,7 +62,7 @@ export default function RootLayout({
           <div className="absolute inset-0 bg-we-silver/80" />
         </div>
 
-        <LanguageProvider>
+        <LanguageProvider initialLocale={initialLocale}>
           <SessionRehydrator />
           <Navbar />
           <div id="main-content">
