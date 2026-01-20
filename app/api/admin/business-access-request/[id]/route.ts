@@ -3,17 +3,6 @@ import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
 import { isValidUUID, sanitizeString } from '@/lib/validation';
 
-// Admin user IDs from environment variable (comma-separated)
-// In production, this should be a proper role system in the database
-const ADMIN_USER_IDS = (process.env.ADMIN_USER_IDS || '').split(',').filter(Boolean);
-
-/**
- * Checks if a user ID is an admin
- */
-function isAdmin(userId: string): boolean {
-  return ADMIN_USER_IDS.includes(userId);
-}
-
 export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -28,8 +17,8 @@ export async function PATCH(
       );
     }
 
-    // Admin authorization check
-    if (!isAdmin(session.userId)) {
+    // Admin authorization check using role from session
+    if (session.role !== 'ADMIN') {
       return NextResponse.json(
         { ok: false, error: 'Forbidden: Admin access required' },
         { status: 403 }
@@ -94,7 +83,7 @@ export async function PATCH(
       prisma.user.update({
         where: { id: request.userId },
         data: {
-          accessStatus: decision,
+          businessStatus: decision,
         },
       }),
     ]);

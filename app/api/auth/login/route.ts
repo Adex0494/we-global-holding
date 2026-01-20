@@ -43,6 +43,7 @@ export async function POST(req: Request) {
     const token = await createSession({
       userId: user.id,
       email: user.email,
+      role: user.role,
     });
 
     // Set session cookie and return success
@@ -54,6 +55,7 @@ export async function POST(req: Request) {
           id: user.id,
           email: user.email,
           fullName: user.fullName,
+          role: user.role,
         },
       },
       { status: 200 }

@@ -11,6 +11,16 @@ interface ApiError {
   message?: string;
 }
 
+interface LoginResponse {
+  ok: boolean;
+  user?: {
+    id: string;
+    email: string;
+    fullName: string;
+    role: 'ADMIN' | 'USER';
+  };
+}
+
 export default function LoginPage() {
   const router = useRouter();
   const { t } = useTranslation();
@@ -42,20 +52,21 @@ export default function LoginPage() {
         }),
       });
 
+      const data = await res.json();
+
       if (!res.ok) {
-        let msg = t('loginFailed');
-        try {
-          const data = (await res.json()) as ApiError;
-          msg = data.error || data.message || msg;
-        } catch {
-          // ignore JSON parse errors
-        }
-        setServerError(msg);
+        const errorData = data as ApiError;
+        setServerError(errorData.error || errorData.message || t('loginFailed'));
         return;
       }
 
-      // Redirect to dashboard on success
-      router.replace('/dashboard');
+      // Redirect based on role
+      const loginData = data as LoginResponse;
+      if (loginData.user?.role === 'ADMIN') {
+        router.replace('/admin/dashboard');
+      } else {
+        router.replace('/account');
+      }
     } catch {
       setServerError(t('loginNetworkError'));
     } finally {

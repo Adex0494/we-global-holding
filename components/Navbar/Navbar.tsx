@@ -2,8 +2,8 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Menu,
   X,
@@ -11,8 +11,10 @@ import {
   Info,
   LayoutGrid,
   LogIn,
+  LogOut,
   ChevronRight,
   User,
+  Shield,
 } from 'lucide-react';
 import { useLanguage } from '@/lib/i18n';
 import type { TranslationKey, Locale } from '@/lib/i18n';
@@ -21,14 +23,16 @@ type NavItem = {
   labelKey: TranslationKey;
   href: string;
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  onClick?: () => void;
 };
 
-const navItems: NavItem[] = [
-  { labelKey: 'navHome', href: '/', icon: Home },
-  { labelKey: 'navAbout', href: '/about', icon: Info },
-  { labelKey: 'navDivisions', href: '/divisions', icon: LayoutGrid },
-  { labelKey: 'navLogin', href: '/login', icon: LogIn },
-];
+type Role = 'ADMIN' | 'USER';
+
+interface Session {
+  userId: string;
+  email: string;
+  role: Role;
+}
 
 interface LanguageToggleProps {
   locale: Locale;
@@ -79,16 +83,87 @@ function LanguageToggle({ locale, onLocaleChange }: LanguageToggleProps) {
 
 export default function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [session, setSession] = useState<Session | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const { t, locale, setLocale } = useLanguage();
-
-  const activeHref = useMemo(
-    () => navItems.find((i) => i.href === pathname)?.href ?? '',
-    [pathname]
-  );
 
   const closeMenu = () => setMenuOpen(false);
   const toggleMenu = () => setMenuOpen((v) => !v);
+
+  // Fetch session on mount
+  useEffect(() => {
+    async function fetchSession() {
+      try {
+        const res = await fetch('/api/auth/session', { credentials: 'include' });
+        const data = await res.json();
+        if (data.ok && data.session) {
+          setSession(data.session);
+        } else {
+          setSession(null);
+        }
+      } catch {
+        setSession(null);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchSession();
+  }, []);
+
+  // Logout handler
+  const handleLogout = useCallback(async () => {
+    try {
+      await fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include',
+      });
+      setSession(null);
+      closeMenu();
+      router.push('/login');
+    } catch {
+      // Ignore errors
+    }
+  }, [router]);
+
+  // Build navigation items based on auth state
+  const navItems: NavItem[] = useMemo(() => {
+    const baseItems: NavItem[] = [
+      { labelKey: 'navHome', href: '/', icon: Home },
+      { labelKey: 'navDivisions', href: '/divisions', icon: LayoutGrid },
+    ];
+
+    if (!session) {
+      // Logged-out users: Home, Divisions, About, Login
+      return [
+        ...baseItems,
+        { labelKey: 'navAbout', href: '/about', icon: Info },
+        { labelKey: 'navLogin', href: '/login', icon: LogIn },
+      ];
+    }
+
+    if (session.role === 'ADMIN') {
+      // Admin users: Home, Divisions, Admin, Logout
+      return [
+        ...baseItems,
+        { labelKey: 'navAdmin', href: '/admin/dashboard', icon: Shield },
+        { labelKey: 'navLogout', href: '#', icon: LogOut, onClick: handleLogout },
+      ];
+    }
+
+    // Regular users: Home, Divisions, Account, Logout
+    return [
+      ...baseItems,
+      { labelKey: 'navAccount', href: '/account', icon: User },
+      { labelKey: 'navLogout', href: '#', icon: LogOut, onClick: handleLogout },
+    ];
+  }, [session, handleLogout]);
+
+  const activeHref = useMemo(
+    () => navItems.find((i) => i.href === pathname)?.href ?? '',
+    [pathname, navItems]
+  );
 
   /* Close on ESC */
   useEffect(() => {
@@ -109,6 +184,9 @@ export default function Navbar() {
       document.body.style.overflow = prev;
     };
   }, [menuOpen]);
+
+  // Get user initials for avatar
+  const userInitial = session?.email?.charAt(0).toUpperCase() || 'U';
 
   return (
     <header className="fixed top-0 left-0 w-full z-40" role="banner">
@@ -142,13 +220,15 @@ export default function Navbar() {
 
         {/* MOBILE ACTIONS */}
         <div className="flex items-center gap-3 md:hidden">
-          <div
-            className="w-9 h-9 rounded-full bg-black/90 flex items-center justify-center text-white text-xs shadow-sm"
-            role="img"
-            aria-label="User avatar"
-          >
-            N
-          </div>
+          {!isLoading && session && (
+            <div
+              className="w-9 h-9 rounded-full bg-black/90 flex items-center justify-center text-white text-xs shadow-sm"
+              role="img"
+              aria-label="User avatar"
+            >
+              {userInitial}
+            </div>
+          )}
 
           <button
             type="button"
@@ -169,28 +249,41 @@ export default function Navbar() {
         {/* DESKTOP NAV */}
         <div className="hidden md:flex items-center gap-10" role="menubar">
           {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              role="menuitem"
-              aria-current={activeHref === item.href ? 'page' : undefined}
-              className={`nav-link text-sm font-medium transition text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:ring-offset-2 rounded-md px-2 py-1 ${
-                activeHref === item.href
-                  ? 'opacity-100'
-                  : 'opacity-60 hover:opacity-100'
-              }`}
-            >
-              {t(item.labelKey)}
-            </Link>
+            item.onClick ? (
+              <button
+                key={item.labelKey}
+                onClick={item.onClick}
+                role="menuitem"
+                className="nav-link text-sm font-medium transition text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:ring-offset-2 rounded-md px-2 py-1 opacity-60 hover:opacity-100"
+              >
+                {t(item.labelKey)}
+              </button>
+            ) : (
+              <Link
+                key={item.href}
+                href={item.href}
+                role="menuitem"
+                aria-current={activeHref === item.href ? 'page' : undefined}
+                className={`nav-link text-sm font-medium transition text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:ring-offset-2 rounded-md px-2 py-1 ${
+                  activeHref === item.href
+                    ? 'opacity-100'
+                    : 'opacity-60 hover:opacity-100'
+                }`}
+              >
+                {t(item.labelKey)}
+              </Link>
+            )
           ))}
 
-          <button
-            type="button"
-            className="w-9 h-9 rounded-full bg-black/90 flex items-center justify-center text-white text-xs shadow-sm cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:ring-offset-2"
-            aria-label="User profile menu"
-          >
-            N
-          </button>
+          {!isLoading && session && (
+            <div
+              className="w-9 h-9 rounded-full bg-black/90 flex items-center justify-center text-white text-xs shadow-sm"
+              role="img"
+              aria-label="User avatar"
+            >
+              {userInitial}
+            </div>
+          )}
         </div>
       </nav>
 
@@ -238,7 +331,11 @@ export default function Navbar() {
                 role="img"
                 aria-label="User avatar"
               >
-                <User className="w-5 h-5" aria-hidden="true" />
+                {session ? (
+                  <span className="text-sm font-medium">{userInitial}</span>
+                ) : (
+                  <User className="w-5 h-5" aria-hidden="true" />
+                )}
               </div>
               <div>
                 <p className="text-sm font-semibold text-neutral-900">
@@ -264,6 +361,35 @@ export default function Navbar() {
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = item.href === activeHref;
+
+                if (item.onClick) {
+                  return (
+                    <li key={item.labelKey} role="none">
+                      <button
+                        onClick={() => {
+                          item.onClick?.();
+                        }}
+                        role="menuitem"
+                        tabIndex={menuOpen ? 0 : -1}
+                        className="w-full group flex items-center justify-between rounded-2xl px-4 py-3 bg-white/30 border border-white/35 shadow-sm transition-all duration-200 hover:bg-white/45 hover:-translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:ring-offset-2"
+                      >
+                        <span className="flex items-center gap-3">
+                          <span
+                            className="w-9 h-9 rounded-xl bg-black/5 flex items-center justify-center"
+                            aria-hidden="true"
+                          >
+                            <Icon className="w-5 h-5 text-black" />
+                          </span>
+                          <span className="text-sm font-medium text-neutral-900">
+                            {t(item.labelKey)}
+                          </span>
+                        </span>
+
+                        <ChevronRight className="w-4 h-4 text-neutral-600 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                      </button>
+                    </li>
+                  );
+                }
 
                 return (
                   <li key={item.href} role="none">

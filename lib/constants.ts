@@ -9,14 +9,19 @@ export const ROUTES = {
   DIVISIONS: '/divisions',
   LOGIN: '/login',
   REGISTER: '/register',
+  ACCOUNT: '/account',
   DASHBOARD: '/dashboard',
   BUSINESS_ACCESS_REQUEST: '/business-access/request',
+  ADMIN_DASHBOARD: '/admin/dashboard',
+  ADMIN_REQUESTS: '/admin/requests',
 } as const;
 
 // API endpoints
 export const API_ROUTES = {
   USERS: '/api/users',
   LOGIN: '/api/auth/login',
+  LOGOUT: '/api/auth/logout',
+  SESSION: '/api/auth/session',
   BUSINESS_ACCESS_REQUEST: '/api/business-access-request',
 } as const;
 

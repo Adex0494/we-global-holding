@@ -8,6 +8,9 @@ export const es = {
   navAbout: 'Nosotros',
   navDivisions: 'Divisiones',
   navLogin: 'Iniciar Sesión',
+  navLogout: 'Cerrar Sesión',
+  navAccount: 'Cuenta',
+  navAdmin: 'Admin',
   navWelcome: 'Bienvenido',
   navFooterText: 'Acceso empresarial premium y flujos de trabajo seguros.',
 

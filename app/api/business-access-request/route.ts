@@ -39,7 +39,7 @@ export async function POST(req: Request) {
     // Check if user already has approved access or pending request
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { accessStatus: true },
+      select: { businessStatus: true },
     });
 
     if (!user) {
@@ -50,7 +50,7 @@ export async function POST(req: Request) {
     }
 
     // Prevent submission if user already has approved access
-    if (user.accessStatus === 'APPROVED') {
+    if (user.businessStatus === 'APPROVED') {
       return NextResponse.json(
         { ok: false, errorCode: ERROR_CODES.ALREADY_APPROVED },
         { status: 409 }
@@ -58,7 +58,7 @@ export async function POST(req: Request) {
     }
 
     // Check for existing pending request
-    if (user.accessStatus === 'PENDING') {
+    if (user.businessStatus === 'PENDING') {
       return NextResponse.json(
         { ok: false, errorCode: ERROR_CODES.PENDING_REQUEST },
         { status: 409 }
@@ -227,7 +227,7 @@ export async function POST(req: Request) {
       }),
       prisma.user.update({
         where: { id: userId },
-        data: { accessStatus: 'PENDING' },
+        data: { businessStatus: 'PENDING' },
       }),
     ]);
 

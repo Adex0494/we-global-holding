@@ -104,7 +104,7 @@ export async function POST(req: Request) {
           email: user.email,
           phone: user.phone,
           dateOfBirth: user.dateOfBirth,
-          accessStatus: user.accessStatus,
+          businessStatus: user.businessStatus,
           createdAt: user.createdAt,
         },
       },

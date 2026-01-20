@@ -29,7 +29,12 @@
       "Bash(powershell -Command \"Get-ChildItem -Path ''app\\\\divisions'' | Select-Object Name\")",
       "Bash(npx next build)",
       "Bash(npm test:*)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(xargs cat:*)",
+      "Bash(find:*)",
+      "Bash(npx prisma migrate dev:*)",
+      "Bash(npx prisma migrate:*)",
+      "Bash(npx prisma generate)"
     ]
   }
 }

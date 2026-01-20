@@ -8,9 +8,12 @@ const JWT_SECRET = new TextEncoder().encode(
 const SESSION_COOKIE = 'session';
 const SESSION_DURATION = 60 * 60 * 24 * 7; // 7 days in seconds
 
+export type Role = 'ADMIN' | 'USER';
+
 export interface SessionPayload extends JWTPayload {
   userId: string;
   email: string;
+  role: Role;
 }
 
 export async function createSession(payload: SessionPayload): Promise<string> {
