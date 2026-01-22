@@ -23,6 +23,8 @@ export const API_ROUTES = {
   LOGOUT: '/api/auth/logout',
   SESSION: '/api/auth/session',
   BUSINESS_ACCESS_REQUEST: '/api/business-access-request',
+  ADMIN_BUSINESS_ACCESS_REQUEST: '/api/admin/business-access-request',
+  ADMIN_BUSINESS_ACCESS_REQUEST_STATS: '/api/admin/business-access-request/stats',
 } as const;
 
 // Validation

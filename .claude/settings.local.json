@@ -35,7 +35,8 @@
       "Bash(npx prisma migrate dev:*)",
       "Bash(npx prisma migrate:*)",
       "Bash(npx prisma generate)",
-      "Bash(npx next lint:*)"
+      "Bash(npx next lint:*)",
+      "Bash(npx tsx:*)"
     ]
   }
 }

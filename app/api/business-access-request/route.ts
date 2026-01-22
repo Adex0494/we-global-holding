@@ -21,7 +21,33 @@ export const ERROR_CODES = {
   PENDING_REQUEST: 'PENDING_REQUEST',
   ALREADY_APPROVED: 'ALREADY_APPROVED',
   INTERNAL_ERROR: 'INTERNAL_ERROR',
+  NOT_FOUND: 'NOT_FOUND',
 } as const;
+
+export async function GET() {
+  try {
+    const session = await getSession();
+    if (!session?.userId) {
+      return NextResponse.json(
+        { ok: false, errorCode: ERROR_CODES.UNAUTHORIZED },
+        { status: 401 }
+      );
+    }
+
+    const request = await prisma.businessAccessRequest.findFirst({
+      where: { userId: session.userId },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return NextResponse.json({ ok: true, request }, { status: 200 });
+  } catch (error) {
+    console.error('Get user request error:', error);
+    return NextResponse.json(
+      { ok: false, errorCode: ERROR_CODES.INTERNAL_ERROR },
+      { status: 500 }
+    );
+  }
+}
 
 export async function POST(req: Request) {
   try {
