@@ -10,7 +10,8 @@ export const es = {
   navLogin: 'Iniciar Sesión',
   navLogout: 'Cerrar Sesión',
   navAccount: 'Cuenta',
-  navAdmin: 'Admin',
+  navAdmin: 'Panel',
+  navRequests: 'Solicitudes',
   navWelcome: 'Bienvenido',
   navFooterText: 'Acceso empresarial premium y flujos de trabajo seguros.',
 

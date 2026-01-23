@@ -15,6 +15,7 @@ import {
   ChevronRight,
   User,
   Shield,
+  ClipboardList,
 } from 'lucide-react';
 import { useLanguage } from '@/lib/i18n';
 import type { TranslationKey, Locale } from '@/lib/i18n';
@@ -144,10 +145,11 @@ export default function Navbar() {
     }
 
     if (session.role === 'ADMIN') {
-      // Admin users: Home, Divisions, Admin, Logout
+      // Admin users: Home, Divisions, Dashboard, Requests, Logout
       return [
         ...baseItems,
         { labelKey: 'navAdmin', href: '/admin/dashboard', icon: Shield },
+        { labelKey: 'navRequests', href: '/admin/requests', icon: ClipboardList },
         { labelKey: 'navLogout', href: '#', icon: LogOut, onClick: handleLogout },
       ];
     }
@@ -160,10 +162,21 @@ export default function Navbar() {
     ];
   }, [session, handleLogout]);
 
-  const activeHref = useMemo(
-    () => navItems.find((i) => i.href === pathname)?.href ?? '',
-    [pathname, navItems]
-  );
+  // Determine active nav item using route matching
+  // Exact match for most routes, but /admin/requests also matches /admin/requests/[id]
+  const activeHref = useMemo(() => {
+    // First try exact match
+    const exactMatch = navItems.find((i) => i.href === pathname);
+    if (exactMatch) return exactMatch.href;
+
+    // For admin requests, match nested routes like /admin/requests/[id]
+    if (pathname.startsWith('/admin/requests')) {
+      const requestsItem = navItems.find((i) => i.href === '/admin/requests');
+      if (requestsItem) return requestsItem.href;
+    }
+
+    return '';
+  }, [pathname, navItems]);
 
   /* Close on ESC */
   useEffect(() => {

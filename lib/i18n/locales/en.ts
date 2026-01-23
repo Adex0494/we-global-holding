@@ -10,7 +10,8 @@ export const en = {
   navLogin: 'Login',
   navLogout: 'Logout',
   navAccount: 'Account',
-  navAdmin: 'Admin',
+  navAdmin: 'Dashboard',
+  navRequests: 'Requests',
   navWelcome: 'Welcome',
   navFooterText: 'Premium enterprise access and secure workflows.',
 
