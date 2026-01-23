@@ -2,9 +2,10 @@ import type { Metadata } from 'next';
 import { cookies, headers } from 'next/headers';
 import './globals.css';
 import Navbar from '@/components/Navbar';
-import SessionRehydrator from '@/components/SessionRehydrator';
 import { LanguageProvider, LANGUAGE_COOKIE_NAME } from '@/lib/i18n';
 import type { Locale } from '@/lib/i18n';
+import { SessionProvider, type Session } from '@/lib/auth/SessionContext';
+import { getSession } from '@/lib/auth';
 
 export const metadata: Metadata = {
   title: 'WE Global Holding Inc.',
@@ -35,12 +36,26 @@ async function getInitialLocale(): Promise<Locale> {
   return 'en';
 }
 
+async function getInitialSession(): Promise<Session | null> {
+  const sessionPayload = await getSession();
+  if (!sessionPayload) return null;
+
+  return {
+    userId: sessionPayload.userId,
+    email: sessionPayload.email,
+    role: sessionPayload.role,
+  };
+}
+
 export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const initialLocale = await getInitialLocale();
+  const [initialLocale, initialSession] = await Promise.all([
+    getInitialLocale(),
+    getInitialSession(),
+  ]);
 
   return (
     <html lang={initialLocale}>
@@ -63,11 +78,12 @@ export default async function RootLayout({
         </div>
 
         <LanguageProvider initialLocale={initialLocale}>
-          <SessionRehydrator />
-          <Navbar />
-          <div id="main-content">
-            {children}
-          </div>
+          <SessionProvider initialSession={initialSession}>
+            <Navbar />
+            <div id="main-content">
+              {children}
+            </div>
+          </SessionProvider>
         </LanguageProvider>
       </body>
     </html>

@@ -63,6 +63,8 @@ model BusinessAccessRequest {
   createdAt              DateTime @default(now())
 
   user                   User @relation(fields: [userId], references: [id])
+
+  @@index([userId, status])
 }
 
 enum CompanyType {
@@ -76,5 +78,6 @@ enum RequestStatus {
   PENDING
   APPROVED
   DENIED
+  ARCHIVED
 }
 

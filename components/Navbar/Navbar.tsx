@@ -19,6 +19,8 @@ import {
 } from 'lucide-react';
 import { useLanguage } from '@/lib/i18n';
 import type { TranslationKey, Locale } from '@/lib/i18n';
+import { useSession } from '@/lib/auth/SessionContext';
+import { API_ROUTES } from '@/lib/constants';
 
 type NavItem = {
   labelKey: TranslationKey;
@@ -26,14 +28,6 @@ type NavItem = {
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   onClick?: () => void;
 };
-
-type Role = 'ADMIN' | 'USER';
-
-interface Session {
-  userId: string;
-  email: string;
-  role: Role;
-}
 
 interface LanguageToggleProps {
   locale: Locale;
@@ -86,47 +80,26 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [session, setSession] = useState<Session | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const { session, isLoading, clearSession } = useSession();
   const { t, locale, setLocale } = useLanguage();
 
   const closeMenu = () => setMenuOpen(false);
   const toggleMenu = () => setMenuOpen((v) => !v);
 
-  // Fetch session on mount and when pathname changes (for login/logout reactivity)
-  useEffect(() => {
-    async function fetchSession() {
-      try {
-        const res = await fetch('/api/auth/session', { credentials: 'include' });
-        const data = await res.json();
-        if (data.ok && data.session) {
-          setSession(data.session);
-        } else {
-          setSession(null);
-        }
-      } catch {
-        setSession(null);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    fetchSession();
-  }, [pathname]);
-
   // Logout handler
   const handleLogout = useCallback(async () => {
     try {
-      await fetch('/api/auth/logout', {
+      await fetch(API_ROUTES.LOGOUT, {
         method: 'POST',
         credentials: 'include',
       });
-      setSession(null);
+      clearSession();
       closeMenu();
       router.push('/login');
     } catch {
       // Ignore errors
     }
-  }, [router]);
+  }, [router, clearSession]);
 
   // Build navigation items based on auth state
   const navItems: NavItem[] = useMemo(() => {

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { GlassCard, Button, Input } from '@/components/ui';
 import { useTranslation } from '@/lib/i18n';
+import { useSession } from '@/lib/auth/SessionContext';
 
 interface ApiError {
   error?: string;
@@ -24,6 +25,7 @@ interface LoginResponse {
 export default function LoginContent() {
   const router = useRouter();
   const { t } = useTranslation();
+  const { refreshSession } = useSession();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -59,6 +61,9 @@ export default function LoginContent() {
         setServerError(errorData.error || errorData.message || t('loginFailed'));
         return;
       }
+
+      // Refresh session context so Navbar updates immediately
+      await refreshSession();
 
       // Redirect based on role
       const loginData = data as LoginResponse;

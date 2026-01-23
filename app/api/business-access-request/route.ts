@@ -35,7 +35,10 @@ export async function GET() {
     }
 
     const request = await prisma.businessAccessRequest.findFirst({
-      where: { userId: session.userId },
+      where: {
+        userId: session.userId,
+        status: { not: 'ARCHIVED' },
+      },
       orderBy: { createdAt: 'desc' },
     });
 
@@ -83,13 +86,8 @@ export async function POST(req: Request) {
       );
     }
 
-    // Check for existing pending request
-    if (user.businessStatus === 'PENDING') {
-      return NextResponse.json(
-        { ok: false, errorCode: ERROR_CODES.PENDING_REQUEST },
-        { status: 409 }
-      );
-    }
+    // Note: Users with PENDING or DENIED status CAN submit new requests.
+    // Their old requests will be archived in the transaction below.
 
     const body = await req.json();
 
@@ -211,26 +209,17 @@ export async function POST(req: Request) {
       );
     }
 
-    // Double-check for existing pending request (race condition protection)
-    const existingRequest = await prisma.businessAccessRequest.findFirst({
-      where: {
-        userId,
-        status: 'PENDING',
-      },
-    });
-
-    if (existingRequest) {
-      return NextResponse.json(
-        {
-          ok: false,
-          errorCode: ERROR_CODES.PENDING_REQUEST,
+    // Archive any existing PENDING or DENIED requests, create new request, and update user status atomically
+    const [, request] = await prisma.$transaction([
+      // Archive old requests (single active request invariant)
+      prisma.businessAccessRequest.updateMany({
+        where: {
+          userId,
+          status: { in: ['PENDING', 'DENIED'] },
         },
-        { status: 409 }
-      );
-    }
-
-    // Create request and update user status atomically
-    const [request] = await prisma.$transaction([
+        data: { status: 'ARCHIVED' },
+      }),
+      // Create new request
       prisma.businessAccessRequest.create({
         data: {
           userId,
@@ -251,6 +240,7 @@ export async function POST(req: Request) {
           status: 'PENDING',
         },
       }),
+      // Update user status
       prisma.user.update({
         where: { id: userId },
         data: { businessStatus: 'PENDING' },

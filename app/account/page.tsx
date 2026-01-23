@@ -6,7 +6,7 @@ import { GlassCard } from '@/components/ui';
 import { ROUTES } from '@/lib/constants';
 import AccountRequestActions from './AccountRequestActions';
 
-type RequestStatus = 'PENDING' | 'APPROVED' | 'DENIED';
+type RequestStatus = 'PENDING' | 'APPROVED' | 'DENIED' | 'ARCHIVED';
 type BusinessStatus = 'NONE' | 'PENDING' | 'APPROVED' | 'DENIED';
 
 interface BusinessAccessRequest {
@@ -31,16 +31,18 @@ interface BusinessAccessRequest {
 }
 
 function StatusBadge({ status }: { status: RequestStatus }) {
-  const styles = {
+  const styles: Record<RequestStatus, string> = {
     PENDING: 'bg-amber-100 text-amber-800',
     APPROVED: 'bg-green-100 text-green-800',
     DENIED: 'bg-red-100 text-red-800',
+    ARCHIVED: 'bg-neutral-100 text-neutral-600',
   };
 
-  const labels = {
+  const labels: Record<RequestStatus, string> = {
     PENDING: 'Under Review',
     APPROVED: 'Approved',
     DENIED: 'Denied',
+    ARCHIVED: 'Archived',
   };
 
   return (
@@ -203,6 +205,7 @@ export default async function AccountPage() {
       email: true,
       businessStatus: true,
       businessAccessRequests: {
+        where: { status: { not: 'ARCHIVED' } },
         orderBy: { createdAt: 'desc' },
         take: 1,
       },

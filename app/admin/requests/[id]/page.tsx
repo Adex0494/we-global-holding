@@ -6,17 +6,18 @@ import { ROUTES } from '@/lib/constants';
 import { isValidUUID } from '@/lib/validation';
 import AdminRequestActions from './AdminRequestActions';
 
-type RequestStatus = 'PENDING' | 'APPROVED' | 'DENIED';
+type RequestStatus = 'PENDING' | 'APPROVED' | 'DENIED' | 'ARCHIVED';
 
 interface Props {
   params: Promise<{ id: string }>;
 }
 
 function StatusBadge({ status }: { status: RequestStatus }) {
-  const styles = {
+  const styles: Record<RequestStatus, string> = {
     PENDING: 'bg-amber-100 text-amber-800',
     APPROVED: 'bg-green-100 text-green-800',
     DENIED: 'bg-red-100 text-red-800',
+    ARCHIVED: 'bg-neutral-100 text-neutral-600',
   };
 
   return (

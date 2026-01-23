@@ -3,17 +3,18 @@ import { prisma } from '@/lib/prisma';
 import { GlassCard } from '@/components/ui';
 import { ROUTES } from '@/lib/constants';
 
-type RequestStatus = 'PENDING' | 'APPROVED' | 'DENIED';
+type RequestStatus = 'PENDING' | 'APPROVED' | 'DENIED' | 'ARCHIVED';
 
 interface Props {
   searchParams: Promise<{ status?: string }>;
 }
 
 function StatusBadge({ status }: { status: RequestStatus }) {
-  const styles = {
+  const styles: Record<RequestStatus, string> = {
     PENDING: 'bg-amber-100 text-amber-800',
     APPROVED: 'bg-green-100 text-green-800',
     DENIED: 'bg-red-100 text-red-800',
+    ARCHIVED: 'bg-neutral-100 text-neutral-600',
   };
 
   return (
@@ -34,10 +35,11 @@ function formatDate(date: Date): string {
 }
 
 async function getRequests(status?: string) {
+  // Filter by specific status if provided, otherwise exclude ARCHIVED
   const whereClause =
     status && ['PENDING', 'APPROVED', 'DENIED'].includes(status)
       ? { status: status as RequestStatus }
-      : {};
+      : { status: { not: 'ARCHIVED' as const } };
 
   return prisma.businessAccessRequest.findMany({
     where: whereClause,
