@@ -83,7 +83,7 @@ export default function RegisterPage() {
       }
 
       setSuccessMsg('Account created. Redirecting…');
-      router.replace('/dashboard');
+      router.replace('/account');
     } catch {
       setServerError(
         'Network error. Please check your connection and try again.'

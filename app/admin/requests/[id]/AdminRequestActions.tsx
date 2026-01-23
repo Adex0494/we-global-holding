@@ -2,14 +2,15 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { GlassCard, Button, Textarea } from '@/components/ui';
-import { ROUTES } from '@/lib/constants';
+import { GlassCard, Button, Textarea, ConfirmDialog } from '@/components/ui';
 
 interface Props {
   requestId: string;
   isPending: boolean;
   existingNotes: string | null;
 }
+
+type DecisionType = 'APPROVED' | 'DENIED' | null;
 
 export default function AdminRequestActions({
   requestId,
@@ -21,6 +22,7 @@ export default function AdminRequestActions({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [pendingDecision, setPendingDecision] = useState<DecisionType>(null);
 
   const handleDecision = async (decision: 'APPROVED' | 'DENIED') => {
     setIsLoading(true);
@@ -43,17 +45,32 @@ export default function AdminRequestActions({
 
       if (!response.ok) {
         setError(data.error || 'Failed to process request');
+        setPendingDecision(null);
         return;
       }
 
       setSuccess(`Request has been ${decision.toLowerCase()}.`);
+      setPendingDecision(null);
 
       // Refresh the page to show updated status
       router.refresh();
     } catch {
       setError('Network error. Please try again.');
+      setPendingDecision(null);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleConfirm = () => {
+    if (pendingDecision) {
+      handleDecision(pendingDecision);
+    }
+  };
+
+  const handleCancelDialog = () => {
+    if (!isLoading) {
+      setPendingDecision(null);
     }
   };
 
@@ -70,52 +87,77 @@ export default function AdminRequestActions({
   }
 
   return (
-    <GlassCard enableHover={false}>
-      <h2 className="text-lg font-semibold text-neutral-900 mb-4">
-        Review Decision
-      </h2>
+    <>
+      <GlassCard enableHover={false}>
+        <h2 className="text-lg font-semibold text-neutral-900 mb-4">
+          Review Decision
+        </h2>
 
-      {error && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">
-          {error}
+        {error && (
+          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">
+            {error}
+          </div>
+        )}
+
+        {success && (
+          <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-xl text-green-700 text-sm">
+            {success}
+          </div>
+        )}
+
+        <div className="space-y-4">
+          <Textarea
+            label="Admin Notes (optional)"
+            value={adminNotes}
+            onChange={setAdminNotes}
+            placeholder="Add any notes about this decision..."
+            rows={3}
+          />
+
+          <div className="flex gap-4 pt-2">
+            <Button
+              onClick={() => setPendingDecision('APPROVED')}
+              disabled={isLoading}
+              className="bg-green-600 hover:bg-green-700"
+            >
+              Approve Request
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => setPendingDecision('DENIED')}
+              disabled={isLoading}
+              className="border-red-200 text-red-700 hover:bg-red-50"
+            >
+              Deny Request
+            </Button>
+          </div>
         </div>
-      )}
+      </GlassCard>
 
-      {success && (
-        <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-xl text-green-700 text-sm">
-          {success}
-        </div>
-      )}
+      {/* Approve Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={pendingDecision === 'APPROVED'}
+        title="Approve Request"
+        description="Are you sure you want to approve this business access request? The user will be granted access to business features."
+        confirmLabel="Approve"
+        cancelLabel="Cancel"
+        isLoading={isLoading}
+        onConfirm={handleConfirm}
+        onCancel={handleCancelDialog}
+      />
 
-      <div className="space-y-4">
-        <Textarea
-          label="Admin Notes (optional)"
-          value={adminNotes}
-          onChange={setAdminNotes}
-          placeholder="Add any notes about this decision..."
-          rows={3}
-        />
-
-        <div className="flex gap-4 pt-2">
-          <Button
-            onClick={() => handleDecision('APPROVED')}
-            isLoading={isLoading}
-            disabled={isLoading}
-            className="bg-green-600 hover:bg-green-700"
-          >
-            Approve Request
-          </Button>
-          <Button
-            variant="secondary"
-            onClick={() => handleDecision('DENIED')}
-            isLoading={isLoading}
-            disabled={isLoading}
-            className="border-red-200 text-red-700 hover:bg-red-50"
-          >
-            Deny Request
-          </Button>
-        </div>
-      </div>
-    </GlassCard>
+      {/* Deny Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={pendingDecision === 'DENIED'}
+        title="Deny Request"
+        description="Are you sure you want to deny this business access request? The user will be notified of the decision."
+        confirmLabel="Deny"
+        cancelLabel="Cancel"
+        confirmVariant="danger"
+        isLoading={isLoading}
+        onConfirm={handleConfirm}
+        onCancel={handleCancelDialog}
+      />
+    </>
   );
 }

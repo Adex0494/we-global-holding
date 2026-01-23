@@ -3,6 +3,22 @@ import { prisma } from '@/lib/prisma';
 import { createSession, getSessionCookieOptions } from '@/lib/auth';
 import bcrypt from 'bcryptjs';
 
+/**
+ * DEV ONLY: Check if this is the admin shortcut login
+ * Works only when NODE_ENV === 'development'
+ * Credentials: admin/admin@gmail.com with password: admin
+ */
+function isDevAdminLogin(email: string, password: string): boolean {
+  if (process.env.NODE_ENV !== 'development') {
+    return false;
+  }
+  const normalizedEmail = email.toLowerCase().trim();
+  return (
+    (normalizedEmail === 'admin' || normalizedEmail === 'admin@gmail.com') &&
+    password === 'admin'
+  );
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -14,6 +30,48 @@ export async function POST(req: Request) {
         { ok: false, error: 'Email and password are required' },
         { status: 400 }
       );
+    }
+
+    // DEV ONLY: Admin shortcut login
+    if (isDevAdminLogin(email, password)) {
+      // Find or verify an admin user exists in the database
+      const adminUser = await prisma.user.findFirst({
+        where: { role: 'ADMIN' },
+      });
+
+      if (adminUser) {
+        // Create session for the admin user
+        const token = await createSession({
+          userId: adminUser.id,
+          email: adminUser.email,
+          role: adminUser.role,
+        });
+
+        const cookieOptions = getSessionCookieOptions();
+        const response = NextResponse.json(
+          {
+            ok: true,
+            user: {
+              id: adminUser.id,
+              email: adminUser.email,
+              fullName: adminUser.fullName,
+              role: adminUser.role,
+            },
+          },
+          { status: 200 }
+        );
+
+        response.cookies.set(cookieOptions.name, token, {
+          httpOnly: cookieOptions.httpOnly,
+          secure: cookieOptions.secure,
+          sameSite: cookieOptions.sameSite,
+          path: cookieOptions.path,
+          maxAge: cookieOptions.maxAge,
+        });
+
+        return response;
+      }
+      // If no admin user exists, fall through to normal login flow
     }
 
     // Find user by email

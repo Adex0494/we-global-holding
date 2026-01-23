@@ -228,7 +228,7 @@ export default function BusinessAccessRequestPage() {
 
       setSuccessMsg(t('businessAccessSuccess'));
       setTimeout(() => {
-        router.replace(ROUTES.DASHBOARD);
+        router.replace(ROUTES.ACCOUNT);
       }, 2000);
     } catch {
       setServerError(t('loginNetworkError'));

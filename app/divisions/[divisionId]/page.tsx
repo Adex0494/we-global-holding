@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useParams, redirect } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n';
 import { divisions } from '@/data/divisions';
@@ -11,6 +12,21 @@ import { GlassCard } from '@/components/ui';
 export default function DivisionPage() {
   const params = useParams<{ divisionId: string }>();
   const { t } = useTranslation();
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
+
+  // Check if user is logged in
+  useEffect(() => {
+    async function checkSession() {
+      try {
+        const res = await fetch('/api/auth/session', { credentials: 'include' });
+        const data = await res.json();
+        setIsLoggedIn(data.ok && data.session);
+      } catch {
+        setIsLoggedIn(false);
+      }
+    }
+    checkSession();
+  }, []);
 
   const division = divisions.find(
     (d) => d.id === params.divisionId
@@ -87,7 +103,7 @@ export default function DivisionPage() {
       </section>
 
       {/* Additional Info Section */}
-      <section className="grid md:grid-cols-2 gap-8" aria-label="Division details">
+      <section className={`grid ${isLoggedIn === false ? 'md:grid-cols-2' : 'md:grid-cols-1'} gap-8`} aria-label="Division details">
         <GlassCard enableHover={false} aria-labelledby="status-heading">
           <div className="space-y-3">
             <h3 id="status-heading" className="text-lg font-semibold">{t('divisionStatus')}</h3>
@@ -98,17 +114,20 @@ export default function DivisionPage() {
           </div>
         </GlassCard>
 
-        <GlassCard enableHover={false} aria-labelledby="interested-heading">
-          <div className="space-y-3">
-            <h3 id="interested-heading" className="text-lg font-semibold">{t('interestedInDivision')}</h3>
-            <Link
-              href="/login"
-              className="inline-flex items-center justify-center px-6 py-2.5 rounded-full font-semibold text-black bg-white/30 backdrop-blur-md border border-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-all duration-300 ease-out hover:-translate-y-1 hover:bg-white/50 hover:shadow-[0_12px_40px_rgba(0,0,0,0.18)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:ring-offset-2"
-            >
-              {t('signUpAndRequestAccess')}
-            </Link>
-          </div>
-        </GlassCard>
+        {/* CTA only shown for logged-out users */}
+        {isLoggedIn === false && (
+          <GlassCard enableHover={false} aria-labelledby="interested-heading">
+            <div className="space-y-3">
+              <h3 id="interested-heading" className="text-lg font-semibold">{t('interestedInDivision')}</h3>
+              <Link
+                href="/login"
+                className="inline-flex items-center justify-center px-6 py-2.5 rounded-full font-semibold text-black bg-white/30 backdrop-blur-md border border-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-all duration-300 ease-out hover:-translate-y-1 hover:bg-white/50 hover:shadow-[0_12px_40px_rgba(0,0,0,0.18)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:ring-offset-2"
+              >
+                {t('signUpAndRequestAccess')}
+              </Link>
+            </div>
+          </GlassCard>
+        )}
       </section>
     </main>
   );
