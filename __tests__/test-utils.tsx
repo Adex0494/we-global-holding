@@ -7,7 +7,7 @@ interface AllTheProvidersProps {
 }
 
 function AllTheProviders({ children }: AllTheProvidersProps) {
-  return <LanguageProvider>{children}</LanguageProvider>;
+  return <LanguageProvider initialLocale="en">{children}</LanguageProvider>;
 }
 
 const customRender = (
